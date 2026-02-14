@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config({quiet: true});
+// quiet: true option hides the warning or the number of ENV variables that were loaded from the .env file. 
 
 export const ENV = {
     PORT: process.env.PORT,
