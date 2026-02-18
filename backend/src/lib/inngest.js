@@ -1,6 +1,7 @@
 import { Inngest } from "inngest";
 import { connectDB } from "./db.js";
 import { User } from "../models/User.modal.js";
+import { deleteStreamUser, upsertStreamUser } from "./stream.js";
 
 export const inngest = new Inngest({ id: "ProctoHire" });
 
@@ -25,6 +26,12 @@ const syncUser = inngest.createFunction(
         try {
             const user = await User.create(newUser);
             console.log("User saved:", user);
+
+            await upsertStreamUser({
+                id: newUser.clerkId.toString(),
+                name: newUser.name,
+                image: newUser.profileImage
+            })
         } catch (err) {
             console.error("DB ERROR:", err);
             throw err;
@@ -43,6 +50,8 @@ const deleteUserFromDB = inngest.createFunction(
         try {
             await User.deleteOne({ clerkId: id })
             console.log("User deleted");
+
+            await deleteStreamUser(id.toString());
         } catch (err) {
             console.error("Deletion failed : ", err);
             throw err;
