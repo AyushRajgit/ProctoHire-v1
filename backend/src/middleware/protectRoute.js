@@ -4,7 +4,7 @@
 */
 
 import { requireAuth } from "@clerk/express";
-import User from "../models/User.modal.js";
+import { User } from "../models/User.modal.js";
 
 export const protectRoute = [
     // If user is not authenticated redirects him to sign-in page.
