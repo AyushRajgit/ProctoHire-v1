@@ -31,7 +31,11 @@ const syncUser = inngest.createFunction(
                 id: newUser.clerkId.toString(),
                 name: newUser.name,
                 image: newUser.profileImage
-            })
+            });
+
+            // Task :
+            // After a user creates his/her account : 
+            // Send them a welcome mail.
         } catch (err) {
             console.error("DB ERROR:", err);
             throw err;
