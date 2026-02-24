@@ -1,22 +1,26 @@
-import './App.css'
-import { SignedIn, SignedOut, SignInButton, SignOutButton, UserButton } from '@clerk/clerk-react'
+import { Navigate, Routes, Route } from 'react-router'
+import HomePage from "./pages/HomePage.jsx"
+import ProblemsPage from "./pages/ProblemsPage.jsx"
+import { Toaster } from "react-hot-toast"
+import { useUser } from '@clerk/clerk-react'
 
 function App() {
-  
+  const { isSignedIn } = useUser();
+
   return (
     <>
-      <h1>Welcome to ProctoHire</h1>
-      <SignedOut>
-        <SignInButton mode="modal"/>
-      </SignedOut>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
 
-      <SignedIn>
-        <SignOutButton/>
-      </SignedIn>
+        <Route path="/problems" element={isSignedIn ? <ProblemsPage /> : <Navigate to={"/"} />} />
+      </Routes>
 
-      <UserButton/>
+      <Toaster toastOptions={{ duration: 3000 }}/>
     </>
   )
 }
 
 export default App
+
+// SetUp Completed : 
+// tailwind, daisyui, react-router, react-hot-toast, react-query (tanstack query), axios
