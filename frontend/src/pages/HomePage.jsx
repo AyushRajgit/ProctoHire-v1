@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { ArrowRightIcon, ZapIcon, CheckCircle2, PlayCircle, Terminal, Globe2, ShieldCheck, VideoIcon, Code2Icon, UsersIcon, Linkedin, Github, Mail, Heart } from "lucide-react";
 import { SignInButton } from "@clerk/clerk-react";
-import { teamMembers } from "../constant";
+import { teamMembers } from "../Server_Data/team";
 
 function HomePage() {
   return (
