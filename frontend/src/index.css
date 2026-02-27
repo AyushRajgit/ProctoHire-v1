@@ -1,2 +1,31 @@
 @import "tailwindcss";
-@plugin "daisyui";
+@plugin "daisyui" {
+    themes: all;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Adding cursor pointer to buttons by default */
+@layer base {
+    button:not(:disabled),
+    [role="button"]:not(:disabled) {
+        cursor: pointer;
+    }
+}
+
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-scroll {
+  display: flex;
+  width: max-content;
+  animation: scroll var(--animation-duration, 20s) linear infinite;
+}
+
+.pause-on-hover:hover .animate-scroll {
+  animation-play-state: paused;
+}
