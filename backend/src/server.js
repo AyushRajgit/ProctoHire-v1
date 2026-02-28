@@ -130,17 +130,16 @@ public class Main {
 });
 
 
-app.get('/', (req, res) => {
+app.get('/health', (req, res) => {
     res.status(200).json({ message: "Welcome to the ProctoHire backend API!" });
 });
 
 // Makes our app ready for deployment by serving the React frontend in production
 if (ENV.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../frontend/dist')));
-
-    app.get('/{*any}', (req, res) => {
-        res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'));
-    });
+  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+  app.get('/{*any}', (req, res) => {
+    res.redirect(ENV.CLIENT_URL);
+  });
 }
 
 const startServer = async () => {
