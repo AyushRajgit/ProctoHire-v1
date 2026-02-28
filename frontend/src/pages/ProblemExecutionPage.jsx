@@ -8,6 +8,7 @@ import ProblemDescription from '../components/ProblemDescription.jsx';
 import { executeCode } from '../lib/judge0.js';
 import { Panel, Group, Separator } from "react-resizable-panels";
 import { toast } from "react-hot-toast"
+import { confetti } from "canvas-confetti"
 
 function ProblemExecutionPage() {
     const { id } = useParams();
