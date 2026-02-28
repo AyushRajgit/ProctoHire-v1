@@ -105,7 +105,7 @@ function ProblemsPage() {
           {filteredProblems.length > 0 ? (
             filteredProblems.map((problem) => (
               <Link 
-                to={`/problems/${problem.id}`} 
+                to={`/problem/${problem.id}`} 
                 key={problem.id}
                 className="group flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.04] hover:border-primary/30 transition-all duration-300 cursor-pointer"
               >
