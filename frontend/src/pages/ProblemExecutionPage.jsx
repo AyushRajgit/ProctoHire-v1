@@ -7,7 +7,7 @@ import CodeEditorPanel from '../components/CodeEditorPanel.jsx';
 import ProblemDescription from '../components/ProblemDescription.jsx';
 import { executeCode } from '../lib/judge0.js';
 import { Panel, Group, Separator } from "react-resizable-panels";
-import {toast} from "react-hot-toast"
+import { toast } from "react-hot-toast"
 
 function ProblemExecutionPage() {
     const { id } = useParams();
@@ -54,6 +54,20 @@ function ProblemExecutionPage() {
     };
 
     const handleProblemChange = (newProblemId) => navigate(`/problem/${newProblemId}`);
+
+    const triggerConfetti = () => {
+        confetti({
+            particleCount: 80,
+            spread: 250,
+            origin: { x: 0.2, y: 0.6 },
+        });
+
+        confetti({
+            particleCount: 80,
+            spread: 250,
+            origin: { x: 0.8, y: 0.6 },
+        });
+    };
 
     const normalizeOutput = (output) => {
         // normalize output for comparison (trim whitespace, handle different spacing)
@@ -147,12 +161,6 @@ function ProblemExecutionPage() {
                                 <Panel defaultSize={30} minSize={10}>
                                     <OutputPanel
                                         output={output}
-                                        isRunning={isRunning}
-                                        testCases={currentProblem.testCases}
-                                        activeTab={activeTab}
-                                        setActiveTab={setActiveTab}
-                                        activeCaseIdx={activeCaseIdx}
-                                        setActiveCaseIdx={setActiveCaseIdx}
                                     />
                                 </Panel>
                             </Group>
