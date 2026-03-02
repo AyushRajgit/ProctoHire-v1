@@ -1,26 +1,33 @@
 import express from 'express';
-import {ENV} from './lib/env.js';
 import path from 'path';
 import cors from 'cors';
-import {connectDB} from './lib/db.js';
-import {serve} from "inngest/express";
-import {inngest, functions} from "./lib/inngest.js";
-import { clerkMiddleware} from "@clerk/express";
-import chatRoutes from "./routes/chatRoutes.js";
+import { serve } from 'inngest/express';
+import { clerkMiddleware } from "@clerk/express";
+import chatRoutes from './routes/chatRoutes.js';
 import sessionRoutes from "./routes/sessionRoute.js";
+
+import { ENV } from './lib/env.js';
+import { connectDB } from './lib/db.js';
+import { inngest, functions } from './lib/inngest.js';
+
 
 const app = express();
 const __dirname = path.resolve();
 
-// middleware
+//middlewares
+// console.log("CLIENT URL:", ENV.CLIENT_URL);
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors({origin: [ENV.CLIENT_URL, "http://localhost:5173"], credentials: true}));
-app.use(clerkMiddleware()); // this adds auth field to req obj : req.auth()
+app.use(cors({
+  origin: ENV.CLIENT_URL,
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+app.use(clerkMiddleware());
 
-app.use("/api/inngest", serve({ client:inngest, functions }))
+app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use("/api/chat", chatRoutes);
 app.use("/api/sessions", sessionRoutes);
+
 // CODE RUN ROUTE (piston proxy)
 app.post("/api/run", async (req, res) => {
   try {
@@ -32,9 +39,12 @@ app.post("/api/run", async (req, res) => {
 
     let code = files[0].content;
 
-    // Java special handling
+    // 🔥 Java special handling
     if (language === "java") {
+      // Rename any public class to Main
       code = code.replace(/public class\s+\w+/, "public class Main");
+
+      // If no class provided, wrap code inside Main
       if (!code.includes("public class")) {
         code = `
 public class Main {
@@ -46,20 +56,10 @@ public class Main {
       }
     }
 
-    // C++ special handling (NEW)
-    if (language === "cpp") {
-      // If the user only wrote a class (like LeetCode), it won't compile without a main function.
-      // We silently inject a basic main function at the bottom.
-      if (!code.includes("int main")) {
-        code += `\n\nint main() {\n    // Wrapper injected by backend\n    return 0;\n}\n`;
-      }
-    }
-
     const languageMap = {
       javascript: 63,
       python: 71,
       java: 62,
-      cpp: 54, // Added Judge0 ID for C++
     };
 
     const languageId = languageMap[language];
@@ -68,7 +68,7 @@ public class Main {
       return res.status(400).json({ error: "Unsupported language" });
     }
 
-    // Submit code to Judge0
+    // 🔥 Submit code to Judge0
     const submitResponse = await fetch(
       "https://ce.judge0.com/submissions?base64_encoded=false",
       {
@@ -92,10 +92,9 @@ public class Main {
     }
 
     let resultData;
-    let attempts = 0;
-    const MAX_ATTEMPTS = 20; 
 
-    while (attempts < MAX_ATTEMPTS) {
+    // 🔥 Poll until execution finishes
+    while (true) {
       const resultResponse = await fetch(
         `https://ce.judge0.com/submissions/${token}?base64_encoded=false`
       );
@@ -103,21 +102,17 @@ public class Main {
       resultData = await resultResponse.json();
 
       if (resultData.status?.id > 2) break; 
-      // 1 = In Queue, 2 = Processing, >2 = Completed
+      // 1 = In Queue
+      // 2 = Processing
+      // >2 = Completed
 
       await new Promise(r => setTimeout(r, 1000));
-      attempts++;
     }
 
-    if (attempts >= MAX_ATTEMPTS) {
-       return res.status(504).json({ error: "Execution timed out on the server." });
-    }
-
-    // Send results back to React
     res.json({
       run: {
         stdout: resultData.stdout,
-        stderr: resultData.stderr || resultData.compile_output || resultData.message, 
+        stderr: resultData.stderr,
       },
     });
 
@@ -129,24 +124,29 @@ public class Main {
 
 
 app.get('/health', (req, res) => {
-    res.status(200).json({ message: "Welcome to the ProctoHire backend API!" });
+  res.status(200).json({ msg: 'api is running' });
 });
 
-// Makes our app ready for deployment by serving the React frontend in production
-if (ENV.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend/dist')));
-  app.get('/{*any}', (req, res) => {
-    res.redirect(ENV.CLIENT_URL);
-  });
-}
+// Catch-all for undefined API routes using a standard Express middleware
+app.use((req, res) => {
+  res.status(404).json({ error: `Route not found: ${req.method} ${req.originalUrl}` });
+});
+
+
+
 
 const startServer = async () => {
-    try {
-        await connectDB();
-        app.listen(ENV.PORT, () => console.log(`Server is running on port ${ENV.PORT}`));
-    } catch (error) {
-        console.error("Error starting the server: ", error);
-    }
-}
+
+  try {
+    await connectDB();
+    app.listen(ENV.PORT, () => {
+      console.log(`Server is running on port ${ENV.PORT}`);
+
+    });
+  } catch (error) {
+    console.error(' ❌Failed to start server', error);
+    process.exit(1);
+  }
+};
 
 startServer();
