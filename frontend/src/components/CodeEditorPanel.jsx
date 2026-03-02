@@ -70,7 +70,6 @@ function CodeEditorPanel({
 
         </div>
 
-        {/* EXECUTE BUTTON - PREMIUM SHIMMER */}
         <button
           onClick={onRunCode}
           disabled={isRunning}

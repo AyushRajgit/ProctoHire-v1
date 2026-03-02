@@ -60,13 +60,11 @@ function DashboardPage() {
   const activeSessions = activeSessionsData?.sessions || [];
   const recentSessions = recentSessionsData?.sessions || [];
 
-  // Check karne ke liye ki current user already kisi room mein hai ya nahi
   const isUserInSession = (session) => {
     if (!user || !user.id) return false;
     return session.host?.clerkId === user.id || session.participant?.clerkId === user.id;
   };
 
-  // 🔥 Jab tak Clerk load ho raha hai, Premium Loader dikhao
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-[#030712] flex items-center justify-center">
@@ -78,7 +76,6 @@ function DashboardPage() {
   return (
     <div className="min-h-screen bg-[#030712] text-slate-200 font-sans selection:bg-primary/30 overflow-x-hidden">
       
-      {/* 🔥 THEME: AMBIENT GLOWING BACKGROUND GRID */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/10 blur-[150px] rounded-full mix-blend-screen" />
@@ -93,7 +90,6 @@ function DashboardPage() {
           {/* Welcome Header */}
           <WelcomeSection onCreateSession={() => setShowCreateModal(true)} user={user} />
 
-          {/* 🔥 MAIN GRID: Stats left mein, Active Sessions right mein */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
             <div className="lg:col-span-1">
               <StatsCards
@@ -111,13 +107,11 @@ function DashboardPage() {
             </div>
           </div>
 
-          {/* Recent Sessions Table Bottom mein */}
           <RecentSessions sessions={recentSessions} isLoading={loadingRecentSessions} />
           
         </div>
       </main>
 
-      {/* Modal hamesha page ke upar khulega */}
       <CreateSessionModal
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}

@@ -56,7 +56,7 @@ function SessionPage() {
         setCurrentProblemId(matchedProblemEntry[0]);
       } else {
         // Fallback agar problem title na mile (ideally pehla problem)
-        setCurrentProblemId(Object.keys(PROBLEMS)[0]); 
+        setCurrentProblemId(Object.keys(PROBLEMS)[0]);
       }
     }
   }, [session?.problem]);
@@ -82,13 +82,12 @@ function SessionPage() {
   }, [currentProblem, selectedLanguage]);
 
   const handleProblemChange = (newProblemId) => {
-     // 🔥 Update dropdown locally for the user
-     setCurrentProblemId(newProblemId);
-     const newProblem = PROBLEMS[newProblemId];
-     if(newProblem?.starterCode?.[selectedLanguage]) {
-         setCode(newProblem.starterCode[selectedLanguage]);
-     }
-     setOutput(null);
+    setCurrentProblemId(newProblemId);
+    const newProblem = PROBLEMS[newProblemId];
+    if (newProblem?.starterCode?.[selectedLanguage]) {
+      setCode(newProblem.starterCode[selectedLanguage]);
+    }
+    setOutput(null);
   };
 
   const handleLanguageChange = (e) => {
@@ -99,7 +98,7 @@ function SessionPage() {
     setOutput(null);
   };
 
-  // 🔥 NORMALIZATION & TESTING LOGIC
+  // NORMALIZATION & TESTING LOGIC
   const normalizeOutput = (output) => {
     if (!output) return "";
     let strOutput = Array.isArray(output) ? output.join("\n") : String(output);
@@ -170,7 +169,7 @@ function SessionPage() {
 
   return (
     <div className="h-screen bg-[#030712] text-slate-200 font-sans selection:bg-teal-500/30 flex flex-col overflow-hidden">
-      
+
       {/* BACKGROUND */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
@@ -182,21 +181,21 @@ function SessionPage() {
       </div>
 
       <div className="flex-1 relative z-10 overflow-hidden p-2 md:p-3">
-        
+
         {/* MAIN HORIZONTAL LAYOUT */}
         <Group direction="horizontal" className="rounded-3xl overflow-hidden border border-white/5 shadow-2xl bg-[#0A0F1C]/80 backdrop-blur-sm">
-          
-          {/* ================= 1. LEFT PANEL: PROBLEM DESCRIPTION ================= */}
+
+          {/* LEFT PANEL: PROBLEM DESCRIPTION */}
           <Panel defaultSize={25} minSize={20}>
             <div className="h-full relative bg-[#0A0F1C]/50 flex flex-col">
-              
+
               {/* TOP HEADER (Host & End Button) */}
               <div className="p-4 border-b border-white/5 bg-[#0A0F1C]/90 backdrop-blur-md shrink-0 flex items-center justify-between gap-2 z-20">
-                 <span className="flex items-center gap-1.5 text-slate-400 text-xs bg-white/5 px-2 py-1 rounded-md border border-white/10">
-                    <UsersIcon className="size-3 text-teal-500" />
-                    Host: <span className="text-slate-200">{session?.host?.firstName || "Dev"}</span>
-                  </span>
-                
+                <span className="flex items-center gap-1.5 text-slate-400 text-xs bg-white/5 px-2 py-1 rounded-md border border-white/10">
+                  <UsersIcon className="size-3 text-teal-500" />
+                  Host: <span className="text-slate-200">{session?.host?.firstName || "Dev"}</span>
+                </span>
+
                 {isHost && session?.status === "active" && (
                   <button
                     onClick={handleEndSession}
@@ -212,11 +211,11 @@ function SessionPage() {
               {/* PROBLEM COMPONENT */}
               <div className="flex-1 overflow-hidden">
                 {currentProblem ? (
-                  <ProblemDescription 
-                    problem={currentProblem} 
-                    currentProblemId={currentProblemId} 
-                    onProblemChange={handleProblemChange} 
-                    allProblems={Object.values(PROBLEMS).map(p => ({ id: Object.keys(PROBLEMS).find(k => PROBLEMS[k] === p), title: p.title }))} 
+                  <ProblemDescription
+                    problem={currentProblem}
+                    currentProblemId={currentProblemId}
+                    onProblemChange={handleProblemChange}
+                    allProblems={Object.values(PROBLEMS).map(p => ({ id: Object.keys(PROBLEMS).find(k => PROBLEMS[k] === p), title: p.title }))}
                   />
                 ) : (
                   <div className="h-full flex items-center justify-center p-6 text-slate-500 text-center">
@@ -233,7 +232,7 @@ function SessionPage() {
             <div className="h-12 w-0.5 bg-white/20 rounded-full group-hover:bg-teal-500/50 transition-colors" />
           </Separator>
 
-          {/* ================= 2. MIDDLE PANEL: VIDEO CALL ================= */}
+          {/* MIDDLE PANEL: VIDEO CALL */}
           <Panel defaultSize={25} minSize={20}>
             <div className="h-full bg-[#0A0F1C]/70 relative overflow-hidden border-r border-white/5">
               {isInitializingCall ? (
@@ -265,31 +264,31 @@ function SessionPage() {
             <div className="h-12 w-0.5 bg-white/20 rounded-full group-hover:bg-teal-500/50 transition-colors" />
           </Separator>
 
-          {/* ================= 3. RIGHT PANEL: EDITOR & OUTPUT ================= */}
-         <Panel defaultSize={60} minSize={30}>
-                            <Group orientation="vertical">
-                                <Panel defaultSize={70} minSize={20}>
-                                    <CodeEditorPanel
-                                        code={code}
-                                        selectedLanguage={selectedLanguage}
-                                        isRunning={isRunning}
-                                        onLanguageChange={handleLanguageChange}
-                                        onCodeChange={setCode}
-                                        onRunCode={handleRunCode}
-                                    />
-                                </Panel>
+          {/* RIGHT PANEL: EDITOR & OUTPUT */}
+          <Panel defaultSize={60} minSize={30}>
+            <Group orientation="vertical">
+              <Panel defaultSize={70} minSize={20}>
+                <CodeEditorPanel
+                  code={code}
+                  selectedLanguage={selectedLanguage}
+                  isRunning={isRunning}
+                  onLanguageChange={handleLanguageChange}
+                  onCodeChange={setCode}
+                  onRunCode={handleRunCode}
+                />
+              </Panel>
 
-                                <Separator className="h-2 w-full bg-white/5 hover:bg-primary/50 transition-colors cursor-row-resize flex items-center justify-center">
-                                    <div className="h-[1px] w-8 bg-white/20 rounded-full" />
-                                </Separator>
+              <Separator className="h-2 w-full bg-white/5 hover:bg-primary/50 transition-colors cursor-row-resize flex items-center justify-center">
+                <div className="h-[1px] w-8 bg-white/20 rounded-full" />
+              </Separator>
 
-                                <Panel defaultSize={30} minSize={10}>
-                                    <OutputPanel
-                                        output={output}
-                                    />
-                                </Panel>
-                            </Group>
-                        </Panel>
+              <Panel defaultSize={30} minSize={10}>
+                <OutputPanel
+                  output={output}
+                />
+              </Panel>
+            </Group>
+          </Panel>
 
         </Group>
       </div>

@@ -15,7 +15,7 @@ const __dirname = path.resolve();
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({origin: [ENV.CLIENT_URL, ENV.CLIENT_LOCAL_URL], credentials: true}));
+app.use(cors({origin: [ENV.CLIENT_URL], credentials: true}));
 app.use(clerkMiddleware()); // this adds auth field to req obj : req.auth()
 
 app.use("/api/inngest", serve({ client:inngest, functions }))
@@ -32,7 +32,7 @@ app.post("/api/run", async (req, res) => {
 
     let code = files[0].content;
 
-    // 🔥 Java special handling
+    // Java special handling
     if (language === "java") {
       code = code.replace(/public class\s+\w+/, "public class Main");
       if (!code.includes("public class")) {
@@ -46,7 +46,7 @@ public class Main {
       }
     }
 
-    // 🔥 C++ special handling (NEW)
+    // C++ special handling (NEW)
     if (language === "cpp") {
       // If the user only wrote a class (like LeetCode), it won't compile without a main function.
       // We silently inject a basic main function at the bottom.
@@ -59,7 +59,7 @@ public class Main {
       javascript: 63,
       python: 71,
       java: 62,
-      cpp: 54, // 🔥 Added Judge0 ID for C++
+      cpp: 54, // Added Judge0 ID for C++
     };
 
     const languageId = languageMap[language];
@@ -68,7 +68,7 @@ public class Main {
       return res.status(400).json({ error: "Unsupported language" });
     }
 
-    // 🔥 Submit code to Judge0
+    // Submit code to Judge0
     const submitResponse = await fetch(
       "https://ce.judge0.com/submissions?base64_encoded=false",
       {
@@ -93,9 +93,8 @@ public class Main {
 
     let resultData;
     let attempts = 0;
-    const MAX_ATTEMPTS = 20; // 🔥 Added safety timeout
+    const MAX_ATTEMPTS = 20; 
 
-    // 🔥 Poll until execution finishes
     while (attempts < MAX_ATTEMPTS) {
       const resultResponse = await fetch(
         `https://ce.judge0.com/submissions/${token}?base64_encoded=false`
@@ -114,11 +113,10 @@ public class Main {
        return res.status(504).json({ error: "Execution timed out on the server." });
     }
 
-    // 🔥 Send results back to React
+    // Send results back to React
     res.json({
       run: {
         stdout: resultData.stdout,
-        // C++ errors appear in compile_output, not stderr!
         stderr: resultData.stderr || resultData.compile_output || resultData.message, 
       },
     });

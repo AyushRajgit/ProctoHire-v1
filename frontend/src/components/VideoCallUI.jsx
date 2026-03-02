@@ -35,13 +35,11 @@ function VideoCallUI({ chatClient, channel }) {
   }
 
   return (
-    // SPACING FIX: p-4 to give breathing room from the edges, gap-6 instead of gap-4
     <div className="h-full flex gap-6 relative str-video p-4 bg-[#0A0F1C]/30">
       
-      {/* LEFT SIDE - VIDEO & CONTROLS */}
+      {/* LEFT SIDE : VIDEO & CONTROLS */}
       <div className="flex-1 flex flex-col gap-6 min-w-0">
         
-        {/* TOP BAR - Glassmorphic */}
         <div className="flex items-center justify-between px-6 py-4 bg-[#030712]/60 border border-white/5 rounded-2xl backdrop-blur-md shadow-lg">
           <div className="flex items-center gap-4">
             {/* Live Indicator */}
@@ -60,7 +58,7 @@ function VideoCallUI({ chatClient, channel }) {
             </div>
           </div>
 
-          {/* Chat Toggle Button - Premium Style */}
+          {/* Chat Toggle Button */}
           {chatClient && channel && (
             <button
               onClick={() => setIsChatOpen(!isChatOpen)}
@@ -77,12 +75,11 @@ function VideoCallUI({ chatClient, channel }) {
           )}
         </div>
 
-        {/* MAIN VIDEO AREA - Deep Dark Wrapper */}
+        {/* MAIN VIDEO AREA */}
         <div className="flex-1 bg-[#030712] border border-white/5 rounded-2xl overflow-hidden relative shadow-2xl flex flex-col">
           <SpeakerLayout />
         </div>
 
-        {/* BOTTOM CONTROLS WRAPPER */}
         <div className="bg-[#030712]/60 border border-white/5 rounded-2xl p-3 flex justify-center backdrop-blur-md shadow-lg">
           <CallControls onLeave={() => navigate("/dashboard")} />
         </div>
@@ -99,7 +96,6 @@ function VideoCallUI({ chatClient, channel }) {
         >
           {isChatOpen && (
             <>
-              {/* Subtle Ambient Glow inside chat */}
               <div className="absolute top-0 right-0 w-40 h-40 bg-teal-500/5 blur-[80px] rounded-full pointer-events-none" />
 
               {/* Chat Header */}

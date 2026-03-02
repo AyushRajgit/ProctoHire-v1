@@ -41,7 +41,7 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
                     {session.problem}
                   </h4>
                   
-                  {/* 🔥 NEW LINE: Hosted By Info */}
+                  {/* Hosted By Info */}
                   <div className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium mb-2.5 uppercase tracking-wide">
                     <UserIcon className="size-3" />
                     <span>
@@ -62,7 +62,7 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
               </div>
 
               {isUserInSession(session) ? (
-                /* REJOIN BUTTON - Clean Teal/Cyan */
+                /* REJOIN BUTTON */
                 <Link 
                   to={`/session/${session._id}`}
                   className="px-6 py-2.5 bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
@@ -71,7 +71,7 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
                   <span>Rejoin</span>
                 </Link>
               ) : (
-                /* JOIN BUTTON - Clean Teal/Cyan */
+                /* JOIN BUTTON */
                 <Link 
                   to={`/session/${session._id}`}
                   className={`px-6 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-opacity ${
