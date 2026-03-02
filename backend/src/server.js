@@ -15,7 +15,7 @@ const __dirname = path.resolve();
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({origin: [ENV.CLIENT_URL], credentials: true}));
+app.use(cors({origin: [ENV.CLIENT_URL, "http://localhost:5173"], credentials: true}));
 app.use(clerkMiddleware()); // this adds auth field to req obj : req.auth()
 
 app.use("/api/inngest", serve({ client:inngest, functions }))
