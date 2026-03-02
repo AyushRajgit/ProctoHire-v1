@@ -77,7 +77,7 @@ export async function getMyRecentSessions(req,res) {
 
 export async function getSessionById(req,res) {
     try {
-        const {id} = req.param;
+        const {id} = req.params;
         
         const session = await Session.findById(id) 
         .populate("host","name email profileImage clerkId")
