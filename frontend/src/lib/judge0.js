@@ -1,6 +1,6 @@
 // Piston API is a service which is used for the code execution
 // NOTE: Ensure your backend is running on port 3000
-const PISTON_API = `${import.meta.env.VITE_API_URL}/run`;
+const PISTON_API = `${import.meta.env.VITE_BACKEND_URL}/api/run`;
 
 const LANGUAGE_VERSIONS = {
   javascript: { language: "javascript", version: "18.15.0" },
