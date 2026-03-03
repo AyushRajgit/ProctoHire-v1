@@ -9,7 +9,6 @@ import Navbar from "../components/Navbar";
 import { toast } from "react-hot-toast";
 import confetti from "canvas-confetti";
 
-// 🔥 CRASH FIX: Sahi components import kiye
 import { Panel, Group, Separator } from "react-resizable-panels";
 import { Loader2Icon, LogOutIcon, PhoneOffIcon, UsersIcon } from "lucide-react";
 import CodeEditorPanel from "../components/CodeEditorPanel";
@@ -24,15 +23,14 @@ function SessionPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { user } = useUser();
-  const [searchParams] = useSearchParams(); // 🔥 URL parameters nikalne ke liye hook
+  const [searchParams] = useSearchParams(); // URL parameters nikalne ke liye hook
   
-  // URL se pwd nikalna (e.g. ?pwd=A1B2C3)
   const pwdFromUrl = searchParams.get("pwd");
 
   const [output, setOutput] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
 
-  // 🔥 Manual Password entry ke liye naye states
+  // Manual Password entry ke liye naye states
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [manualPassword, setManualPassword] = useState("");
 
@@ -70,7 +68,7 @@ function SessionPage() {
 
   const currentProblem = PROBLEMS[currentProblemId];
 
-  // 🔥 JOIN LOGIC (UPDATED FOR MAGIC LINK & PASSWORD)
+  // JOIN LOGIC (UPDATED FOR MAGIC LINK & PASSWORD)
   useEffect(() => {
     if (!session || !user || loadingSession) return;
     if (isHost || isParticipant) return; // Agar already ander hai toh kuch mat karo
@@ -339,7 +337,7 @@ function SessionPage() {
         </Group>
       </div>
 
-      {/* 🔥 PASSWORD PROMPT MODAL (Agar link me pwd nahi hai) */}
+      {/* PASSWORD PROMPT MODAL (Agar link me pwd nahi hai) */}
       {showPasswordPrompt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
           <div className="bg-[#0A0F1C] border border-white/10 rounded-2xl p-8 max-w-md w-full shadow-2xl">
