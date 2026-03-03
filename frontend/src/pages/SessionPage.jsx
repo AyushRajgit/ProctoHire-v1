@@ -1,6 +1,7 @@
 import { useUser } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+
 import { useEndSession, useJoinSession, useSessionById } from "../hooks/useSessions";
 import { PROBLEMS } from "../Server_Data/problems";
 import { executeCode } from "../lib/judge0";
@@ -8,6 +9,7 @@ import Navbar from "../components/Navbar";
 import { toast } from "react-hot-toast";
 import confetti from "canvas-confetti";
 
+// 🔥 CRASH FIX: Sahi components import kiye
 import { Panel, Group, Separator } from "react-resizable-panels";
 import { Loader2Icon, LogOutIcon, PhoneOffIcon, UsersIcon } from "lucide-react";
 import CodeEditorPanel from "../components/CodeEditorPanel";
@@ -22,8 +24,17 @@ function SessionPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { user } = useUser();
+  const [searchParams] = useSearchParams(); // 🔥 URL parameters nikalne ke liye hook
+  
+  // URL se pwd nikalna (e.g. ?pwd=A1B2C3)
+  const pwdFromUrl = searchParams.get("pwd");
+
   const [output, setOutput] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
+
+  // 🔥 Manual Password entry ke liye naye states
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  const [manualPassword, setManualPassword] = useState("");
 
   const { data: sessionData, isLoading: loadingSession, refetch } = useSessionById(id);
 
@@ -41,7 +52,6 @@ function SessionPage() {
     isParticipant
   );
 
-  // Add currentProblemId to handle dropdown changes
   const [currentProblemId, setCurrentProblemId] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("javascript");
   const [code, setCode] = useState("");
@@ -49,12 +59,10 @@ function SessionPage() {
   // Update current problem when session data loads
   useEffect(() => {
     if (session?.problem) {
-      // Find the ID of the problem based on the session's problem title
       const matchedProblemEntry = Object.entries(PROBLEMS).find(([key, p]) => p.title === session.problem);
       if (matchedProblemEntry) {
         setCurrentProblemId(matchedProblemEntry[0]);
       } else {
-        // Fallback agar problem title na mile (ideally pehla problem)
         setCurrentProblemId(Object.keys(PROBLEMS)[0]);
       }
     }
@@ -62,12 +70,51 @@ function SessionPage() {
 
   const currentProblem = PROBLEMS[currentProblemId];
 
+  // 🔥 JOIN LOGIC (UPDATED FOR MAGIC LINK & PASSWORD)
   useEffect(() => {
     if (!session || !user || loadingSession) return;
-    if (isHost || isParticipant) return;
+    if (isHost || isParticipant) return; // Agar already ander hai toh kuch mat karo
 
-    joinSessionMutation.mutate(id, { onSuccess: refetch });
-  }, [session, user, loadingSession, isHost, isParticipant, id]);
+    if (pwdFromUrl) {
+      // 1. Agar Magic Link se aaya hai, toh seedha join API hit kar do
+      joinSessionMutation.mutate(
+        { id: id, password: pwdFromUrl },
+        { 
+          onSuccess: () => {
+             toast.success("Joined session via Magic Link!");
+             refetch();
+          },
+          onError: () => {
+             toast.error("Invalid or Expired Magic Link!");
+             setShowPasswordPrompt(true); // Galat link hone pe prompt dikhao
+          }
+        }
+      );
+    } else {
+      // 2. Agar bina pwd ke URL khola hai, toh Pop-up dikhao
+      setShowPasswordPrompt(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session, user, loadingSession, isHost, isParticipant, id, pwdFromUrl]);
+
+
+  // Manual password submit handle karna
+  const handleManualJoin = (e) => {
+    e.preventDefault();
+    if(!manualPassword) return;
+    
+    joinSessionMutation.mutate(
+        { id: id, password: manualPassword },
+        { 
+          onSuccess: () => {
+            setShowPasswordPrompt(false);
+            refetch();
+            // Note: success toast pehle hi hooks me likha hai, yahan dobara likhne ki zaroorat nahi.
+          },
+          // Error handling bhi hook me already hai
+        }
+      );
+  };
 
   useEffect(() => {
     if (!session || loadingSession) return;
@@ -291,6 +338,44 @@ function SessionPage() {
 
         </Group>
       </div>
+
+      {/* 🔥 PASSWORD PROMPT MODAL (Agar link me pwd nahi hai) */}
+      {showPasswordPrompt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+          <div className="bg-[#0A0F1C] border border-white/10 rounded-2xl p-8 max-w-md w-full shadow-2xl">
+            <h3 className="text-2xl font-bold text-white mb-2">Private Room 🔒</h3>
+            <p className="text-slate-400 text-sm mb-6">This interview session requires a password to enter.</p>
+            
+            <form onSubmit={handleManualJoin}>
+              <input 
+                type="text" 
+                placeholder="Enter Room Password" 
+                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white font-mono tracking-widest text-center text-lg mb-4 uppercase focus:outline-none focus:ring-2 focus:ring-teal-500"
+                value={manualPassword}
+                onChange={(e) => setManualPassword(e.target.value.toUpperCase())}
+                autoFocus
+              />
+              <div className="flex gap-3">
+                <button 
+                  type="button" 
+                  onClick={() => navigate('/dashboard')} 
+                  className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium transition-colors border border-white/10"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  className="flex-1 py-3 rounded-xl bg-teal-500 hover:bg-teal-400 text-[#030712] font-bold transition-colors shadow-lg shadow-teal-500/25 flex items-center justify-center"
+                  disabled={joinSessionMutation.isPending || !manualPassword}
+                >
+                  {joinSessionMutation.isPending ? <Loader2Icon className="animate-spin size-5" /> : "Enter Room"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

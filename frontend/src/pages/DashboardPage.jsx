@@ -18,6 +18,8 @@ function DashboardPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [roomConfig, setRoomConfig] = useState({ problem: "", difficulty: "" });
 
+  const [createdRoomDetails, setCreatedRoomDetails] = useState(null);
+
   const createSessionMutation = useCreateSession();
   const { data: activeSessionsData, isLoading: loadingActiveSessions } = useActiveSessions();
   const { data: recentSessionsData, isLoading: loadingRecentSessions } = useMyRecentSessions();
@@ -35,8 +37,8 @@ function DashboardPage() {
         onSuccess: (data) => {
           console.log("API response:", data);
 
-          // ID nikalne ka bulletproof tarika
           const sessionId = data?.session?._id || data?._id || data?.data?.session?._id;
+          const session = data?.session || data?.data?.session;
 
           if (!sessionId) {
             toast.error("Invalid session response. Please check console.");
@@ -44,7 +46,11 @@ function DashboardPage() {
           }
 
           setShowCreateModal(false);
-          navigate(`/session/${sessionId}`);
+          
+          setCreatedRoomDetails({
+            id: sessionId,
+            password: session.password 
+          });
         },
         onError: (error) => {
           console.error("Creation Error:", error);
@@ -52,6 +58,14 @@ function DashboardPage() {
         }
       }
     );
+  };
+
+  const copyRoomDetails = () => {
+    const roomLink = `${window.location.origin}/session/${createdRoomDetails.id}`;
+    
+    const textToCopy = `Join my Interview Room!\nRoom Link: ${roomLink}\nRoom Password: ${createdRoomDetails.password}`;
+    navigator.clipboard.writeText(textToCopy);
+    toast.success("Room Details Copied to Clipboard!");
   };
 
   const activeSessions = activeSessionsData?.sessions || [];
@@ -84,7 +98,6 @@ function DashboardPage() {
       <main className="relative z-10 pt-28 pb-20">
         <div className="max-w-7xl mx-auto px-6">
           
-          {/* Welcome Header */}
           <WelcomeSection onCreateSession={() => setShowCreateModal(true)} user={user} />
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
@@ -117,6 +130,37 @@ function DashboardPage() {
         onCreateRoom={handleCreateRoom}
         isCreating={createSessionMutation.isPending}
       />
+
+      {createdRoomDetails && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+           <div className="bg-[#0A0F1C] border border-white/10 rounded-2xl p-8 max-w-md w-full shadow-2xl relative">
+              <h3 className="text-2xl font-bold text-white mb-2">Room Created! 🎉</h3>
+              <p className="text-slate-400 text-sm mb-6">Share these details with your candidate so they can join.</p>
+              
+              <div className="space-y-4 mb-6">
+                  <div className="bg-black/50 p-4 rounded-xl border border-white/5">
+                     <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 font-semibold">Room Link</p>
+                     <p className="text-teal-400 font-mono text-sm break-all">{`${window.location.origin}/session/${createdRoomDetails.id}`}</p>
+                  </div>
+                  <div className="bg-black/50 p-4 rounded-xl border border-white/5">
+                     <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 font-semibold">Room Password</p>
+                     <p className="text-white font-mono text-xl tracking-[0.2em]">{createdRoomDetails.password}</p>
+                  </div>
+              </div>
+
+              <div className="flex gap-3">
+                 <button onClick={copyRoomDetails} className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium transition-colors border border-white/10">
+                    Copy Details
+                 </button>
+                 
+                 <button onClick={() => navigate(`/session/${createdRoomDetails.id}`)} className="flex-1 py-3 rounded-xl bg-teal-500 hover:bg-teal-400 text-[#030712] font-bold transition-colors shadow-lg shadow-teal-500/25">
+                    Enter Room
+                 </button>
+              </div>
+           </div>
+        </div>
+      )}
+
     </div>
   );
 }
