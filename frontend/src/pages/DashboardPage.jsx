@@ -16,15 +16,15 @@ import CreateSessionModal from "../components/CreateSessionModal";
 function DashboardPage() {
   const navigate = useNavigate();
   
-  // 🔥 Clerk se user data aur loading state nikal li
+  // Clerk se user data aur loading state nikal li
   const { user, isLoaded } = useUser(); 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [roomConfig, setRoomConfig] = useState({ problem: "", difficulty: "" });
 
-  // 🔥 Nayi states (Room Create hone ke baad Link dikhane ke liye)
+  // Nayi states (Room Create hone ke baad Link dikhane ke liye)
   const [createdRoomDetails, setCreatedRoomDetails] = useState(null);
 
-  // 🔥 Nayi states (Active Sessions se manually join karne ke liye)
+  // Nayi states (Active Sessions se manually join karne ke liye)
   const [joinRoomId, setJoinRoomId] = useState(null);
   const [manualPassword, setManualPassword] = useState("");
 
@@ -53,7 +53,7 @@ function DashboardPage() {
 
           setShowCreateModal(false);
           
-          // 🔥 Direct navigate nahi karna! Password modal dikhana hai
+          // Direct navigate nahi karna! Password modal dikhana hai
           setCreatedRoomDetails({
             id: session._id,
             password: session.password
@@ -67,15 +67,15 @@ function DashboardPage() {
     );
   };
 
-  // 🔥 Host ko invite link copy karne ka feature
+  // Host ko invite link copy karne ka feature
   const copyRoomDetails = () => {
-    const magicLink = `${window.location.origin}/session/${createdRoomDetails.id}?pwd=${createdRoomDetails.password}`;
-    const textToCopy = `Join my Interview Room!\nMagic Link: ${magicLink}\n\nOr join manually with Password: ${createdRoomDetails.password}`;
+    const magicLink = `${window.location.origin}/session/${createdRoomDetails.id}}`;
+    const textToCopy = `Join my Interview Room!\nUsing the Link: ${magicLink}\n\n and enter the given Password: ${createdRoomDetails.password}`;
     navigator.clipboard.writeText(textToCopy);
     toast.success("Magic Link Copied to Clipboard!");
   };
 
-  // 🔥 Active Sessions list se join button click handle karna
+  // Active Sessions list se join button click handle karna
   const handleJoinClick = (sessionId) => {
       // Pura join api toh us page pe hai, yahan se bas id leke page pe redirect karo
       // Wahan session page khud password mangega
