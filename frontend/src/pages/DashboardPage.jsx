@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useActiveSessions, useCreateSession, useMyRecentSessions } from "../hooks/useSessions";
 import { toast } from "react-hot-toast";
 
-// Sare naye premium components import kar rahe hain
 import Navbar from "../components/Navbar";
 import WelcomeSection from "../components/WelcomeSection";
 import StatsCards from "../components/StatsCards";
@@ -15,12 +14,10 @@ import CreateSessionModal from "../components/CreateSessionModal";
 function DashboardPage() {
   const navigate = useNavigate();
   
-  // 🔥 Clerk se user data aur loading state nikal li
   const { user, isLoaded } = useUser(); 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [roomConfig, setRoomConfig] = useState({ problem: "", difficulty: "" });
 
-  // API Hooks
   const createSessionMutation = useCreateSession();
   const { data: activeSessionsData, isLoading: loadingActiveSessions } = useActiveSessions();
   const { data: recentSessionsData, isLoading: loadingRecentSessions } = useMyRecentSessions();

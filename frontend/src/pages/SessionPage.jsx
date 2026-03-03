@@ -8,7 +8,6 @@ import Navbar from "../components/Navbar";
 import { toast } from "react-hot-toast";
 import confetti from "canvas-confetti";
 
-// 🔥 CRASH FIX: Sahi components import kiye
 import { Panel, Group, Separator } from "react-resizable-panels";
 import { Loader2Icon, LogOutIcon, PhoneOffIcon, UsersIcon } from "lucide-react";
 import CodeEditorPanel from "../components/CodeEditorPanel";
@@ -42,7 +41,7 @@ function SessionPage() {
     isParticipant
   );
 
-  // 🔥 STATE FIX: Add currentProblemId to handle dropdown changes
+  // Add currentProblemId to handle dropdown changes
   const [currentProblemId, setCurrentProblemId] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("javascript");
   const [code, setCode] = useState("");
