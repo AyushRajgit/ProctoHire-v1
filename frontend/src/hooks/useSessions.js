@@ -7,7 +7,8 @@ export const useCreateSession = () => {
     mutationKey: ["createSession"],
     mutationFn: sessionApi.createSession,
     onSuccess: () => toast.success("Session created successfully!"),
-    onError: (error) => toast.error(error.response?.data?.message || "Failed to create room"),
+    // 🔥 Updated to catch backend 'error' key
+    onError: (error) => toast.error(error.response?.data?.error || error.response?.data?.message || "Failed to create room"),
   });
 
   return result;
@@ -45,9 +46,12 @@ export const useSessionById = (id) => {
 export const useJoinSession = () => {
   const result = useMutation({
     mutationKey: ["joinSession"],
-    mutationFn: sessionApi.joinSession,
+    // 🔥 React Query yahan automatically { id, password } object pass kar dega sessionApi ko
+    mutationFn: sessionApi.joinSession, 
+    // (Note: Toasts are handled in the component for more control, but we can keep success here too)
     onSuccess: () => toast.success("Joined session successfully!"),
-    onError: (error) => toast.error(error.response?.data?.message || "Failed to join session"),
+    // 🔥 Catching "Invalid Room Password!" error from backend
+    onError: (error) => toast.error(error.response?.data?.error || error.response?.data?.message || "Failed to join session"),
   });
 
   return result;
@@ -58,7 +62,7 @@ export const useEndSession = () => {
     mutationKey: ["endSession"],
     mutationFn: sessionApi.endSession,
     onSuccess: () => toast.success("Session ended successfully!"),
-    onError: (error) => toast.error(error.response?.data?.message || "Failed to end session"),
+    onError: (error) => toast.error(error.response?.data?.error || error.response?.data?.message || "Failed to end session"),
   });
 
   return result;

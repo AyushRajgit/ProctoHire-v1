@@ -29,7 +29,11 @@ const sessionSchema = new mongoose.Schema({
     callId: {
         type: String,
         default: "",
-    }
+    }, 
+    password: { 
+    type: String, 
+    required: true // Har room ka password hona zaroori hai
+    },
 }, {timestamps: true});
 
 export const Session = mongoose.model("session",sessionSchema);
