@@ -3,9 +3,7 @@ import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { useActiveSessions, useCreateSession, useMyRecentSessions } from "../hooks/useSessions";
 import { toast } from "react-hot-toast";
-import { Loader2Icon } from "lucide-react"; // Loader ke liye add kiya
 
-// Sare naye premium components import kar rahe hain
 import Navbar from "../components/Navbar";
 import WelcomeSection from "../components/WelcomeSection";
 import StatsCards from "../components/StatsCards";
@@ -16,15 +14,15 @@ import CreateSessionModal from "../components/CreateSessionModal";
 function DashboardPage() {
   const navigate = useNavigate();
   
-  // Clerk se user data aur loading state nikal li
+  // 🔥 Clerk se user data aur loading state nikal li
   const { user, isLoaded } = useUser(); 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [roomConfig, setRoomConfig] = useState({ problem: "", difficulty: "" });
 
-  // Nayi states (Room Create hone ke baad Link dikhane ke liye)
+  // 🔥 Nayi states (Room Create hone ke baad Link dikhane ke liye)
   const [createdRoomDetails, setCreatedRoomDetails] = useState(null);
 
-  // Nayi states (Active Sessions se manually join karne ke liye)
+  // 🔥 Nayi states (Active Sessions se manually join karne ke liye)
   const [joinRoomId, setJoinRoomId] = useState(null);
   const [manualPassword, setManualPassword] = useState("");
 
@@ -44,19 +42,22 @@ function DashboardPage() {
       },
       {
         onSuccess: (data) => {
+          console.log("API response:", data);
+
+          const sessionId = data?.session?._id || data?._id || data?.data?.session?._id;
           const session = data?.session || data?.data?.session;
 
-          if (!session || !session._id) {
+          if (!sessionId) {
             toast.error("Invalid session response. Please check console.");
             return;
           }
 
           setShowCreateModal(false);
           
-          // Direct navigate nahi karna! Password modal dikhana hai
+          // 🔥 Direct navigate nahi karna! Password modal dikhana hai
           setCreatedRoomDetails({
-            id: session._id,
-            password: session.password
+            id: sessionId,
+            password: session.password 
           });
         },
         onError: (error) => {
@@ -67,15 +68,15 @@ function DashboardPage() {
     );
   };
 
-  // Host ko invite link copy karne ka feature
+  // 🔥 Host ko invite link copy karne ka feature
   const copyRoomDetails = () => {
-    const magicLink = `${window.location.origin}/session/${createdRoomDetails.id}}`;
-    const textToCopy = `Join my Interview Room!\nUsing the Link: ${magicLink}\n\n and enter the given Password: ${createdRoomDetails.password}`;
+    const magicLink = `${window.location.origin}/session/${createdRoomDetails.id}?pwd=${createdRoomDetails.password}`;
+    const textToCopy = `Join my Interview Room!\nMagic Link: ${magicLink}\n\nOr join manually with Password: ${createdRoomDetails.password}`;
     navigator.clipboard.writeText(textToCopy);
-    toast.success("Magic Link Copied to Clipboard!");
+    toast.success("Room Details Copied to Clipboard!");
   };
 
-  // Active Sessions list se join button click handle karna
+  // 🔥 Active Sessions list se join button click handle karna
   const handleJoinClick = (sessionId) => {
       // Pura join api toh us page pe hai, yahan se bas id leke page pe redirect karo
       // Wahan session page khud password mangega
@@ -112,7 +113,6 @@ function DashboardPage() {
       <main className="relative z-10 pt-28 pb-20">
         <div className="max-w-7xl mx-auto px-6">
           
-          {/* Welcome Header */}
           <WelcomeSection onCreateSession={() => setShowCreateModal(true)} user={user} />
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
@@ -128,8 +128,6 @@ function DashboardPage() {
                 sessions={activeSessions}
                 isLoading={loadingActiveSessions}
                 isUserInSession={isUserInSession}
-                // 🔥 Naya prop agar tere ActiveSessions.jsx me handle karna ho
-                onJoinClick={handleJoinClick} 
               />
             </div>
           </div>
@@ -148,7 +146,6 @@ function DashboardPage() {
         isCreating={createSessionMutation.isPending}
       />
 
-      {/* 🔥 Success Modal jo ID aur Password dikhayega Host ko */}
       {createdRoomDetails && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
            <div className="bg-[#0A0F1C] border border-white/10 rounded-2xl p-8 max-w-md w-full shadow-2xl relative">
@@ -157,11 +154,11 @@ function DashboardPage() {
               
               <div className="space-y-4 mb-6">
                   <div className="bg-black/50 p-4 rounded-xl border border-white/5">
-                     <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 font-semibold">Magic Link (Auto-Join)</p>
-                     <p className="text-teal-400 font-mono text-sm break-all">{`${window.location.origin}/session/${createdRoomDetails.id}?pwd=${createdRoomDetails.password}`}</p>
+                     <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 font-semibold">Room Link</p>
+                     <p className="text-teal-400 font-mono text-sm break-all">{`${window.location.origin}/session/${createdRoomDetails.id}`}</p>
                   </div>
                   <div className="bg-black/50 p-4 rounded-xl border border-white/5">
-                     <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 font-semibold">Room Password (Manual)</p>
+                     <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 font-semibold">Room Password</p>
                      <p className="text-white font-mono text-xl tracking-[0.2em]">{createdRoomDetails.password}</p>
                   </div>
               </div>
@@ -170,7 +167,8 @@ function DashboardPage() {
                  <button onClick={copyRoomDetails} className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium transition-colors border border-white/10">
                     Copy Details
                  </button>
-                 <button onClick={() => navigate(`/session/${createdRoomDetails.id}?pwd=${createdRoomDetails.password}`)} className="flex-1 py-3 rounded-xl bg-teal-500 hover:bg-teal-400 text-[#030712] font-bold transition-colors shadow-lg shadow-teal-500/25">
+                 
+                 <button onClick={() => navigate(`/session/${createdRoomDetails.id}`)} className="flex-1 py-3 rounded-xl bg-teal-500 hover:bg-teal-400 text-[#030712] font-bold transition-colors shadow-lg shadow-teal-500/25">
                     Enter Room
                  </button>
               </div>

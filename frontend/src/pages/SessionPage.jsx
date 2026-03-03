@@ -98,7 +98,7 @@ function SessionPage() {
   }, [session, user, loadingSession, isHost, isParticipant, id, pwdFromUrl]);
 
 
-  // 🔥 Manual password submit handle karna
+  // Manual password submit handle karna
   const handleManualJoin = (e) => {
     e.preventDefault();
     if(!manualPassword) return;
