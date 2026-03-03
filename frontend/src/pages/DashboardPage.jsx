@@ -3,6 +3,7 @@ import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { useActiveSessions, useCreateSession, useMyRecentSessions } from "../hooks/useSessions";
 import { toast } from "react-hot-toast";
+import { Loader2Icon } from "lucide-react"; // Loader ke liye add kiya
 
 // Sare naye premium components import kar rahe hain
 import Navbar from "../components/Navbar";
@@ -20,6 +21,13 @@ function DashboardPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [roomConfig, setRoomConfig] = useState({ problem: "", difficulty: "" });
 
+  // 🔥 Nayi states (Room Create hone ke baad Link dikhane ke liye)
+  const [createdRoomDetails, setCreatedRoomDetails] = useState(null);
+
+  // 🔥 Nayi states (Active Sessions se manually join karne ke liye)
+  const [joinRoomId, setJoinRoomId] = useState(null);
+  const [manualPassword, setManualPassword] = useState("");
+
   // API Hooks
   const createSessionMutation = useCreateSession();
   const { data: activeSessionsData, isLoading: loadingActiveSessions } = useActiveSessions();
@@ -36,18 +44,20 @@ function DashboardPage() {
       },
       {
         onSuccess: (data) => {
-          console.log("API response:", data);
+          const session = data?.session || data?.data?.session;
 
-          // ID nikalne ka bulletproof tarika
-          const sessionId = data?.session?._id || data?._id || data?.data?.session?._id;
-
-          if (!sessionId) {
+          if (!session || !session._id) {
             toast.error("Invalid session response. Please check console.");
             return;
           }
 
           setShowCreateModal(false);
-          navigate(`/session/${sessionId}`);
+          
+          // 🔥 Direct navigate nahi karna! Password modal dikhana hai
+          setCreatedRoomDetails({
+            id: session._id,
+            password: session.password
+          });
         },
         onError: (error) => {
           console.error("Creation Error:", error);
@@ -56,6 +66,21 @@ function DashboardPage() {
       }
     );
   };
+
+  // 🔥 Host ko invite link copy karne ka feature
+  const copyRoomDetails = () => {
+    const magicLink = `${window.location.origin}/session/${createdRoomDetails.id}?pwd=${createdRoomDetails.password}`;
+    const textToCopy = `Join my Interview Room!\nMagic Link: ${magicLink}\n\nOr join manually with Password: ${createdRoomDetails.password}`;
+    navigator.clipboard.writeText(textToCopy);
+    toast.success("Magic Link Copied to Clipboard!");
+  };
+
+  // 🔥 Active Sessions list se join button click handle karna
+  const handleJoinClick = (sessionId) => {
+      // Pura join api toh us page pe hai, yahan se bas id leke page pe redirect karo
+      // Wahan session page khud password mangega
+      navigate(`/session/${sessionId}`);
+  }
 
   const activeSessions = activeSessionsData?.sessions || [];
   const recentSessions = recentSessionsData?.sessions || [];
@@ -103,6 +128,8 @@ function DashboardPage() {
                 sessions={activeSessions}
                 isLoading={loadingActiveSessions}
                 isUserInSession={isUserInSession}
+                // 🔥 Naya prop agar tere ActiveSessions.jsx me handle karna ho
+                onJoinClick={handleJoinClick} 
               />
             </div>
           </div>
@@ -120,6 +147,37 @@ function DashboardPage() {
         onCreateRoom={handleCreateRoom}
         isCreating={createSessionMutation.isPending}
       />
+
+      {/* 🔥 Success Modal jo ID aur Password dikhayega Host ko */}
+      {createdRoomDetails && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+           <div className="bg-[#0A0F1C] border border-white/10 rounded-2xl p-8 max-w-md w-full shadow-2xl relative">
+              <h3 className="text-2xl font-bold text-white mb-2">Room Created! 🎉</h3>
+              <p className="text-slate-400 text-sm mb-6">Share these details with your candidate so they can join.</p>
+              
+              <div className="space-y-4 mb-6">
+                  <div className="bg-black/50 p-4 rounded-xl border border-white/5">
+                     <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 font-semibold">Magic Link (Auto-Join)</p>
+                     <p className="text-teal-400 font-mono text-sm break-all">{`${window.location.origin}/session/${createdRoomDetails.id}?pwd=${createdRoomDetails.password}`}</p>
+                  </div>
+                  <div className="bg-black/50 p-4 rounded-xl border border-white/5">
+                     <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 font-semibold">Room Password (Manual)</p>
+                     <p className="text-white font-mono text-xl tracking-[0.2em]">{createdRoomDetails.password}</p>
+                  </div>
+              </div>
+
+              <div className="flex gap-3">
+                 <button onClick={copyRoomDetails} className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium transition-colors border border-white/10">
+                    Copy Details
+                 </button>
+                 <button onClick={() => navigate(`/session/${createdRoomDetails.id}?pwd=${createdRoomDetails.password}`)} className="flex-1 py-3 rounded-xl bg-teal-500 hover:bg-teal-400 text-[#030712] font-bold transition-colors shadow-lg shadow-teal-500/25">
+                    Enter Room
+                 </button>
+              </div>
+           </div>
+        </div>
+      )}
+
     </div>
   );
 }
