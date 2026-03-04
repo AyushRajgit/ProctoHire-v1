@@ -11,7 +11,7 @@ import ActiveSessions from "../components/ActiveSessions";
 import RecentSessions from "../components/RecentSessions";
 import CreateSessionModal from "../components/CreateSessionModal";
 
-function DashboardPage() {
+function DashboardPage() {          
   const navigate = useNavigate();
   
   // Clerk se user data aur loading state nikal li
@@ -128,6 +128,7 @@ function DashboardPage() {
                 sessions={activeSessions}
                 isLoading={loadingActiveSessions}
                 isUserInSession={isUserInSession}
+                 user={user}
               />
             </div>
           </div>

@@ -1,7 +1,8 @@
 import { Code2Icon, PlayCircleIcon, UsersIcon, ArrowRightIcon, UserIcon } from "lucide-react";
 import { Link } from "react-router";
 
-function ActiveSessions({ sessions, isLoading, isUserInSession }) {
+
+function ActiveSessions({ sessions, isLoading, isUserInSession,user }) {
   return (
     <div className="lg:col-span-2 relative rounded-[2rem] border border-white/10 bg-[#0A0F1C] p-8 flex flex-col h-full shadow-lg">
       
@@ -41,14 +42,17 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
                     {session.problem}
                   </h4>
                   
-                  {/* Hosted By Info */}
-                  <div className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium mb-2.5 uppercase tracking-wide">
-                    <UserIcon className="size-3" />
-                    <span>
-                      Hosted by <span className="text-teal-400/80">{session.host?.firstName || "Developer"}</span>
-                    </span>
-                  </div>
 
+{/* Hosted By Info */}
+<div className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium mb-2.5 uppercase tracking-wide">
+  <UserIcon className="size-3" />
+  <span>
+    Hosted by{" "}
+    <span className="text-teal-400/80">
+      {user?.firstName || "User"}
+    </span>
+  </span>
+</div>
                   <div className="flex items-center gap-3 text-xs text-slate-400">
                     <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 uppercase tracking-wider font-semibold text-slate-300">
                       {session.difficulty}
