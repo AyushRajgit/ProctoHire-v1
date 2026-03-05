@@ -61,21 +61,24 @@ STREAM_API_SECRET=your_stream_api_secret
 # Clerk (Authentication)
 CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 CLERK_SECRET_KEY=your_clerk_secret_key
+```
 
+### Frontend (/frontend)
+```env
 # Frontend URL
 CLIENT_URL=http://localhost:5173
 
-# Frontend (/frontend)
 VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 VITE_API_URL=http://localhost:3000/api
 VITE_STREAM_API_KEY=your_stream_api_key
+```
 
 # 🔧 Run the Backend
 cd backend
 npm install
+npm run dev
 
 # 🔧 Run the Frontend
 cd frontend
 npm install
-npm run dev
 npm run dev
