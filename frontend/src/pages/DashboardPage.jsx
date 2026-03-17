@@ -3,7 +3,7 @@ import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { useActiveSessions, useCreateSession, useMyRecentSessions } from "../hooks/useSessions";
 import { toast } from "react-hot-toast";
-import { LinkIcon, HistoryIcon, ArrowRightIcon, ActivityIcon, Code2Icon, BotIcon } from "lucide-react"; // Naye icons add kiye
+import { LinkIcon, HistoryIcon, ArrowRightIcon, ActivityIcon, Code2Icon, BotIcon } from "lucide-react";
 
 import Navbar from "../components/Navbar";
 import WelcomeSection from "../components/WelcomeSection";
@@ -13,10 +13,9 @@ import RecentSessions from "../components/RecentSessions";
 import CreateSessionModal from "../components/CreateSessionModal";
 import InterviewHistory from "../components/InterviewHistory";
 
-// 💼 CLEAN PRO-UI: BentoBox Wrapper
 const BentoBox = ({ children, height = "h-[420px]" }) => (
-  <div className={`${height} w-full flex flex-col rounded-2xl bg-[#0A0F1C] border border-white/10 shadow-lg overflow-hidden`}>
-    <div className="flex-1 overflow-y-auto p-1
+  <div className={`${height} w-full relative rounded-2xl bg-[#0A0F1C] border border-white/10 shadow-lg overflow-hidden`}>
+    <div className="absolute inset-0 overflow-y-auto p-4
       [&::-webkit-scrollbar]:w-1.5 
       [&::-webkit-scrollbar-track]:bg-transparent 
       [&::-webkit-scrollbar-thumb]:bg-white/5
@@ -24,7 +23,7 @@ const BentoBox = ({ children, height = "h-[420px]" }) => (
       [&::-webkit-scrollbar-thumb]:rounded-full 
       transition-colors"
     >
-      <div className="min-h-full">
+      <div className="h-full w-full">
         {children}
       </div>
     </div>
@@ -41,7 +40,7 @@ function DashboardPage() {
   // Search Bar State
   const [joinLink, setJoinLink] = useState("");
   
-  // 🔥 NEW: Tabs State for History Section
+  // Tabs State for History Section
   const [historyTab, setHistoryTab] = useState("live"); // 'live' or 'ai'
 
   const createSessionMutation = useCreateSession();
@@ -139,7 +138,7 @@ function DashboardPage() {
             />
           </div>
 
-          {/* 💼 2. PREMIUM COMMAND PALETTE (Search Bar) */}
+          {/* 💼 2. COMMAND PALETTE (Search Bar) */}
           <div className="max-w-3xl mx-auto mb-14 relative z-20">
             <form 
               onSubmit={handleJoinFromLink} 
@@ -165,7 +164,6 @@ function DashboardPage() {
             </form>
           </div>
 
-          {/* 💼 3. LIVE ARENAS */}
           <div className="mb-12">
             <div className="flex items-center justify-between mb-5 px-1">
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
@@ -173,7 +171,8 @@ function DashboardPage() {
                 Active Arenas
               </h2>
             </div>
-            <BentoBox height="h-[380px]">
+            
+            <BentoBox height="h-[600px]">
               <ActiveSessions
                 sessions={activeSessions}
                 isLoading={loadingActiveSessions}
@@ -183,7 +182,6 @@ function DashboardPage() {
             </BentoBox>
           </div>
 
-          {/* 💼 4. REDESIGNED HISTORY SECTION (Tabs Style) */}
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 px-1">
               <div className="flex items-center gap-2">
@@ -220,7 +218,7 @@ function DashboardPage() {
 
             {/* Single Wide Box for History */}
             <BentoBox height="h-[450px]">
-              <div className="transition-opacity duration-300">
+              <div className="h-full w-full">
                 {historyTab === "live" ? (
                   <RecentSessions sessions={recentSessions} isLoading={loadingRecentSessions} />
                 ) : (
