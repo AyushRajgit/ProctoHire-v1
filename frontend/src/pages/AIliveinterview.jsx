@@ -45,7 +45,7 @@ const AiLiveInterview = () => {
   useEffect(() => {
     const createSession = async () => {
       try {
-        const res = await fetch("/api/interview/session", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/interview/generate`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
