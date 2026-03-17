@@ -8,7 +8,7 @@ const AiLiveInterview = () => {
   const [warning, setWarning] = useState("");
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [time, setTime] = useState(0);
-  const [showEndDialog, setShowEndDialog] = useState(false); // ✅ NEW
+  const [showEndDialog, setShowEndDialog] = useState(false);
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
   const timerRef = useRef(null);
@@ -40,12 +40,12 @@ const AiLiveInterview = () => {
     if (!questions || questions.length === 0) {
       navigate("/ai-mock");
     }
-  }, []);
+  }, [questions, navigate]);
 
   useEffect(() => {
     const createSession = async () => {
       try {
-        const res = await fetch("/api/interview/session", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/interview/session`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -64,7 +64,7 @@ const AiLiveInterview = () => {
     };
 
     if (jobRole && user?.id) createSession();
-  }, [user?.id]);
+  }, [jobRole, jobLevel, jobDescription, user?.id]);
 
   useEffect(() => {
     timerRef.current = setInterval(() => {
@@ -266,7 +266,7 @@ const AiLiveInterview = () => {
   const evaluateAnswer = async () => {
     if (!transcript.trim()) { alert("Please provide an answer before submitting."); return; }
     try {
-      const res = await fetch("/api/interview/evaluate", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/interview/evaluate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: questions[currentIndex], answer: transcript, jobRole, jobLevel }),
@@ -292,7 +292,7 @@ const AiLiveInterview = () => {
   const saveAndExit = async (terminatedEarly = false) => {
     try {
       if (sessionIdRef.current) {
-        await fetch("/api/interview/complete", {
+        await fetch(`${import.meta.env.VITE_API_URL}/interview/complete`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -325,12 +325,10 @@ const AiLiveInterview = () => {
     }
   };
 
-  // ✅ CHANGED — now opens dialog instead of immediately ending
   const endInterview = () => {
     setShowEndDialog(true);
   };
 
-  // ✅ NEW — called when user confirms end in the dialog
   const confirmEndInterview = async () => {
     setShowEndDialog(false);
     if (timerRef.current) clearInterval(timerRef.current);
@@ -357,7 +355,6 @@ const AiLiveInterview = () => {
   return (
     <div style={{ display: "flex", height: "100vh", background: "#0f172a", color: "white" }}>
 
-      {/* ✅ NEW — End Interview Confirmation Dialog */}
       {showEndDialog && (
         <div
           onClick={() => setShowEndDialog(false)}
