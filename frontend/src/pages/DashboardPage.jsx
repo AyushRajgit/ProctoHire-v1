@@ -10,28 +10,21 @@ import StatsCards from "../components/StatsCards";
 import ActiveSessions from "../components/ActiveSessions";
 import RecentSessions from "../components/RecentSessions";
 import CreateSessionModal from "../components/CreateSessionModal";
+import InterviewHistory from "../components/InterviewHistory"; // ✅ NEW
 
 function DashboardPage() {
   const navigate = useNavigate();
-  
-  // Clerk se user data aur loading state nikal li
-  const { user, isLoaded } = useUser(); 
+  const { user, isLoaded } = useUser();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [roomConfig, setRoomConfig] = useState({ problem: "", difficulty: "" });
-
-  // Nayi states (Room Create hone ke baad Link dikhane ke liye)
   const [createdRoomDetails, setCreatedRoomDetails] = useState(null);
-
-  // Nayi states (Active Sessions se manually join karne ke liye)
   const [joinRoomId, setJoinRoomId] = useState(null);
   const [manualPassword, setManualPassword] = useState("");
 
-  // API Hooks
   const createSessionMutation = useCreateSession();
   const { data: activeSessionsData, isLoading: loadingActiveSessions } = useActiveSessions();
   const { data: recentSessionsData, isLoading: loadingRecentSessions } = useMyRecentSessions();
 
-  // Room Create karne ka logic
   const handleCreateRoom = () => {
     if (!roomConfig.problem || !roomConfig.difficulty) return;
 
@@ -53,11 +46,9 @@ function DashboardPage() {
           }
 
           setShowCreateModal(false);
-          
-          // 🔥 Direct navigate nahi karna! Password modal dikhana hai
           setCreatedRoomDetails({
             id: sessionId,
-            password: session.password 
+            password: session.password
           });
         },
         onError: (error) => {
@@ -68,7 +59,6 @@ function DashboardPage() {
     );
   };
 
-  // Host ko invite link copy karne ka feature
   const copyRoomDetails = () => {
     const magicLink = `${window.location.origin}/session/${createdRoomDetails.id}?pwd=${createdRoomDetails.password}`;
     const textToCopy = `Join my Interview Room!\nMagic Link: ${magicLink}\n\nOr join manually with Password: ${createdRoomDetails.password}`;
@@ -76,12 +66,9 @@ function DashboardPage() {
     toast.success("Room Details Copied to Clipboard!");
   };
 
-  // Active Sessions list se join button click handle karna
   const handleJoinClick = (sessionId) => {
-      // Pura join api toh us page pe hai, yahan se bas id leke page pe redirect karo
-      // Wahan session page khud password mangega
-      navigate(`/session/${sessionId}`);
-  }
+    navigate(`/session/${sessionId}`);
+  };
 
   const activeSessions = activeSessionsData?.sessions || [];
   const recentSessions = recentSessionsData?.sessions || [];
@@ -101,7 +88,7 @@ function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#030712] text-slate-200 font-sans selection:bg-primary/30 overflow-x-hidden">
-      
+
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/10 blur-[150px] rounded-full mix-blend-screen" />
@@ -112,7 +99,7 @@ function DashboardPage() {
 
       <main className="relative z-10 pt-28 pb-20">
         <div className="max-w-7xl mx-auto px-6">
-          
+
           <WelcomeSection onCreateSession={() => setShowCreateModal(true)} user={user} />
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
@@ -122,7 +109,7 @@ function DashboardPage() {
                 recentSessionsCount={recentSessions.length}
               />
             </div>
-            
+
             <div className="lg:col-span-2">
               <ActiveSessions
                 sessions={activeSessions}
@@ -133,7 +120,10 @@ function DashboardPage() {
           </div>
 
           <RecentSessions sessions={recentSessions} isLoading={loadingRecentSessions} />
-          
+
+          {/* ✅ NEW — AI Interview History section */}
+          <InterviewHistory />
+
         </div>
       </main>
 
@@ -148,31 +138,30 @@ function DashboardPage() {
 
       {createdRoomDetails && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-           <div className="bg-[#0A0F1C] border border-white/10 rounded-2xl p-8 max-w-md w-full shadow-2xl relative">
-              <h3 className="text-2xl font-bold text-white mb-2">Room Created! 🎉</h3>
-              <p className="text-slate-400 text-sm mb-6">Share these details with your candidate so they can join.</p>
-              
-              <div className="space-y-4 mb-6">
-                  <div className="bg-black/50 p-4 rounded-xl border border-white/5">
-                     <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 font-semibold">Room Link</p>
-                     <p className="text-teal-400 font-mono text-sm break-all">{`${window.location.origin}/session/${createdRoomDetails.id}`}</p>
-                  </div>
-                  <div className="bg-black/50 p-4 rounded-xl border border-white/5">
-                     <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 font-semibold">Room Password</p>
-                     <p className="text-white font-mono text-xl tracking-[0.2em]">{createdRoomDetails.password}</p>
-                  </div>
-              </div>
+          <div className="bg-[#0A0F1C] border border-white/10 rounded-2xl p-8 max-w-md w-full shadow-2xl relative">
+            <h3 className="text-2xl font-bold text-white mb-2">Room Created! 🎉</h3>
+            <p className="text-slate-400 text-sm mb-6">Share these details with your candidate so they can join.</p>
 
-              <div className="flex gap-3">
-                 <button onClick={copyRoomDetails} className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium transition-colors border border-white/10">
-                    Copy Details
-                 </button>
-                 
-                 <button onClick={() => navigate(`/session/${createdRoomDetails.id}`)} className="flex-1 py-3 rounded-xl bg-teal-500 hover:bg-teal-400 text-[#030712] font-bold transition-colors shadow-lg shadow-teal-500/25">
-                    Enter Room
-                 </button>
+            <div className="space-y-4 mb-6">
+              <div className="bg-black/50 p-4 rounded-xl border border-white/5">
+                <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 font-semibold">Room Link</p>
+                <p className="text-teal-400 font-mono text-sm break-all">{`${window.location.origin}/session/${createdRoomDetails.id}`}</p>
               </div>
-           </div>
+              <div className="bg-black/50 p-4 rounded-xl border border-white/5">
+                <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 font-semibold">Room Password</p>
+                <p className="text-white font-mono text-xl tracking-[0.2em]">{createdRoomDetails.password}</p>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button onClick={copyRoomDetails} className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium transition-colors border border-white/10">
+                Copy Details
+              </button>
+              <button onClick={() => navigate(`/session/${createdRoomDetails.id}`)} className="flex-1 py-3 rounded-xl bg-teal-500 hover:bg-teal-400 text-[#030712] font-bold transition-colors shadow-lg shadow-teal-500/25">
+                Enter Room
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
