@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { ArrowRightIcon, ZapIcon, CheckCircle2, PlayCircle, Terminal, Globe2, ShieldCheck, VideoIcon, Code2Icon, UsersIcon, Linkedin, Github, Mail, Heart } from "lucide-react";
+import { ArrowRightIcon, ZapIcon, CheckCircle2, PlayCircle, Terminal, Globe2, ShieldCheck, VideoIcon, Code2Icon, UsersIcon, Linkedin, Github, Mail, Heart, CheckCircle2Icon, LayoutDashboardIcon, PlayIcon, TerminalIcon, GlobeIcon } from "lucide-react";
 import { SignInButton } from "@clerk/clerk-react";
 import { teamMembers } from "../Server_Data/team";
 
@@ -131,6 +131,114 @@ function HomePage() {
         </div>
       </div>
 
+      <section className="max-w-7xl mx-auto px-6 py-24 border-t border-white/5">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-16 text-center">From setup to success in seconds</h2>
+
+        <div className="grid md:grid-cols-4 gap-8 relative">
+          <div className="hidden md:block absolute top-6 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+
+          {[
+            { step: "01", title: "Create Room", desc: "Generate a secure interview link instantly.", icon: <LayoutDashboardIcon className="size-5" /> },
+            { step: "02", title: "Join Face-to-Face", desc: "Connect via high-fidelity video and audio.", icon: <UsersIcon className="size-5" /> },
+            { step: "03", title: "Solve Together", desc: "Write, run, and debug code collaboratively.", icon: <PlayIcon className="size-5" /> },
+            { step: "04", title: "Review & Hire", desc: "Playback code history and make decisions.", icon: <CheckCircle2Icon className="size-5" /> },
+          ].map((item, i) => (
+            <div key={i} className="relative flex flex-col items-center text-center">
+              <div className="size-12 rounded-full bg-[#050505] border border-indigo-500/30 flex items-center justify-center text-indigo-400 mb-6 z-10 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
+                {item.icon}
+              </div>
+              <div className="text-sm font-mono text-indigo-500 mb-2">Step {item.step}</div>
+              <h4 className="text-lg font-semibold text-white mb-2">{item.title}</h4>
+              <p className="text-sm text-slate-400">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* DEVELOPER / STUDENT AUDIENCE SECTION */}
+
+      <section className="max-w-7xl mx-auto px-6 py-24 border-t border-white/5">
+
+        <div className="grid lg:grid-cols-3 gap-8">
+
+          <div className="lg:col-span-1 flex flex-col justify-center">
+
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Built for whoever is at the keyboard.</h2>
+
+            <p className="text-slate-400 mb-8 leading-relaxed">Whether you are a hyper-growth startup hiring top talent, or a group of friends grinding LeetCode, our infrastructure scales to your needs.</p>
+
+            <button className="flex items-center gap-2 text-indigo-400 hover:text-indigo-300 font-medium transition-colors w-fit">
+
+              Explore Use Cases <ArrowRightIcon className="size-4" />
+
+            </button>
+
+          </div>
+
+
+
+          <div className="lg:col-span-2 grid sm:grid-cols-2 gap-6">
+
+            <div className="p-8 rounded-3xl bg-gradient-to-b from-white/[0.05] to-transparent border border-white/5 relative overflow-hidden group">
+
+              <div className="absolute top-0 right-0 p-6 opacity-20 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
+
+                <GlobeIcon className="size-24 text-indigo-500" />
+
+              </div>
+
+              <div className="relative z-10">
+
+                <h4 className="text-xl font-semibold text-white mb-2">For Students</h4>
+
+                <ul className="space-y-3 mt-6">
+
+                  <li className="flex items-center gap-3 text-slate-300 text-sm"><CheckCircle2Icon className="size-4 text-indigo-400" /> Mock interviews with peers</li>
+
+                  <li className="flex items-center gap-3 text-slate-300 text-sm"><CheckCircle2Icon className="size-4 text-indigo-400" /> Real-time DSA practice</li>
+
+                  <li className="flex items-center gap-3 text-slate-300 text-sm"><CheckCircle2Icon className="size-4 text-indigo-400" /> Placement preparation</li>
+
+                </ul>
+
+              </div>
+
+            </div>
+
+
+
+            <div className="p-8 rounded-3xl bg-gradient-to-b from-white/[0.05] to-transparent border border-white/5 relative overflow-hidden group">
+
+              <div className="absolute top-0 right-0 p-6 opacity-20 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
+
+                <TerminalIcon className="size-24 text-fuchsia-500" />
+
+              </div>
+
+              <div className="relative z-10">
+
+                <h4 className="text-xl font-semibold text-white mb-2">For Recruiters</h4>
+
+                <ul className="space-y-3 mt-6">
+
+                  <li className="flex items-center gap-3 text-slate-300 text-sm"><CheckCircle2Icon className="size-4 text-fuchsia-400" /> Standardized environments</li>
+
+                  <li className="flex items-center gap-3 text-slate-300 text-sm"><CheckCircle2Icon className="size-4 text-fuchsia-400" /> Code playback & history</li>
+
+                  <li className="flex items-center gap-3 text-slate-300 text-sm"><CheckCircle2Icon className="size-4 text-fuchsia-400" /> Zero setup required</li>
+
+                </ul>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
       {/* TEAM SLIDE BAR */}
       <div id="Our-Team" className="py-36 pb-60 relative overflow-hidden z-10">
         <div className="max-w-7xl mx-auto px-6 mb-12">
@@ -219,7 +327,7 @@ function HomePage() {
                 <li className="hover:text-primary transition-colors">AI Proctoring</li>
                 <li className="hover:text-primary transition-colors">Interviews</li>
                 <li className="hover:text-primary transition-colors">Video Calling</li>
-                
+
               </ul>
             </div>
 

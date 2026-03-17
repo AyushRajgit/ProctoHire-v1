@@ -1,8 +1,32 @@
-import axios from "axios"
+import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
-    withCredentials: true, // by adding this field, browser will send the cookies to server automatically, on every single request.
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',  
+    withCredentials: true, // Include cookies in requests
 });
 
-export default axiosInstance
+// 🔥 Add this interceptor
+axiosInstance.interceptors.request.use(
+    async (config) => {
+        // Check if Clerk is loaded on the window and a session is active
+        if (window.Clerk && window.Clerk.session) {
+            try {
+                // Fetch the active session token
+                const token = await window.Clerk.session.getToken();
+                
+                if (token) {
+                    // Attach it to the Authorization header
+                    config.headers.Authorization = `Bearer ${token}`;
+                }
+            } catch (error) {
+                console.error("Failed to fetch Clerk token:", error);
+            }
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
+export default axiosInstance;

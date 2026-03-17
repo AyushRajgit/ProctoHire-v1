@@ -30,6 +30,19 @@ html {
   animation-play-state: paused;
 }
 
+:root {
+  --str-video-primary-color: #14b8a6; /* Tailwind Teal 500 */
+  --str-video-surface-color: rgba(255, 255, 255, 0.05); /* Glassmorphic dark */
+  --str-video-surface-color-hover: rgba(255, 255, 255, 0.1);
+  --str-chat__primary-color: #14b8a6;
+}
+
+.str-video__call-controls {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
     display: none;
