@@ -12,7 +12,7 @@ import RecentSessions from "../components/RecentSessions";
 import CreateSessionModal from "../components/CreateSessionModal";
 import InterviewHistory from "../components/InterviewHistory"; // ✅ NEW
 
-function DashboardPage() {
+function DashboardPage() {          
   const navigate = useNavigate();
   const { user, isLoaded } = useUser();
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -115,6 +115,7 @@ function DashboardPage() {
                 sessions={activeSessions}
                 isLoading={loadingActiveSessions}
                 isUserInSession={isUserInSession}
+                 user={user}
               />
             </div>
           </div>
