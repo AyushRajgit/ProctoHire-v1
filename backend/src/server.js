@@ -22,8 +22,8 @@ const __dirname = path.resolve();
 
 app.use(express.json());
 app.use(cors({
-  origin: ENV.CLIENT_URL,
   credentials: true,
+  origin: [ENV.CLIENT_URL, "https://procto-hire-v1.vercel.app", "http://localhost:5173"],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(clerkMiddleware());
