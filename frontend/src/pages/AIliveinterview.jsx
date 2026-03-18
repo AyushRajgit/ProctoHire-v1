@@ -76,6 +76,7 @@ const AiLiveInterview = () => {
     return () => clearInterval(timerRef.current);
   }, []);
 
+  
  useEffect(() => {
     const loadModels = async () => {
       try {
