@@ -36,7 +36,7 @@ const AiLiveInterview = () => {
   const answersRef = useRef([]);
   const violationsLogRef = useRef([]);
 
-  const API_BASE_URL = import.meta.env.VITE_API_URL; // ✅ Helper variable for clean code
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL; // ✅ Helper variable for clean code
 
   useEffect(() => {
     if (!questions || questions.length === 0) {
