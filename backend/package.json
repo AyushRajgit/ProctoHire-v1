@@ -1,33 +1,3 @@
-{
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "",
-  "license": "ISC",
-  "author": "",
-  "type": "module",
-  "main": "src/server.js",
-  "scripts": {
-    "dev": "nodemon src/server.js",
-    "start": "node src/server.js"
-  },
-  "dependencies": {
-    "@clerk/express": "^1.7.76",
-    "@stream-io/node-sdk": "^0.7.43",
-    "cors": "^2.8.6",
-    "dotenv": "^17.3.1",
-    "express": "^5.2.1",
-    "inngest": "^3.52.5",
-    "mongoose": "^9.2.3",
-    "stream-chat": "^9.35.1",
-    "inngest": "^3.52.4",
-    "mongoose": "^9.2.3",
-    "node-fetch": "^3.3.2",
-    "openai": "^6.25.0",
-    "proctohire": "file:..",
-    "stream-chat": "^9.35.1",
-    "uuid": "^13.0.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.14"
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:3bdde8807a62f272fc10261f75677b9c9ecd6060c5344129acc4ee225177cd2a
+size 729
