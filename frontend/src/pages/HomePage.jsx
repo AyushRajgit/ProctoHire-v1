@@ -75,11 +75,17 @@ function HomePage() {
           <div className="absolute -inset-1 bg-gradient-to-r from-primary/50 to-secondary/50 rounded-[2.5rem] blur-2xl opacity-20 group-hover:opacity-40 transition duration-1000"></div>
           <div className="relative rounded-[2rem] border border-white/10 bg-[#0A0F1C] p-2 shadow-2xl overflow-hidden">
             <div className="rounded-[1.5rem] border border-white/5 overflow-hidden bg-[#030712] relative aspect-video">
-              <img
-                src="/hero.png"
+
+              {/* VIDEO TAG*/}
+              <video
+                src="/homepage-video-file.mp4"
                 className="w-full h-full object-cover opacity-80 group-hover:scale-[1.02] transition-transform duration-700"
-                alt="Editor Interface"
+                autoPlay
+                loop
+                muted
+                playsInline
               />
+              {/* 👆 VIDEO TAG END 👆 */}
 
               <div className="absolute bottom-6 left-6 right-6 flex justify-between items-end pointer-events-none">
                 <div className="bg-black/60 backdrop-blur-md border border-white/10 p-4 rounded-xl flex items-center gap-4">
