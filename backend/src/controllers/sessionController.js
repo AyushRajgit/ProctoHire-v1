@@ -57,7 +57,7 @@ export async function createSession(req, res) {
 export async function getActiveSessions(req, res) {
     try {
         const sessions = await Session.find({ status: "active" })
-            .populate("host", "name profileImage email clerkId")
+            .populate("host", "firstName lastName email profileImage clerkId")
             .sort({ createdAt: -1 })
             .limit(20);
 
@@ -92,8 +92,8 @@ export async function getSessionById(req, res) {
         const { id } = req.params;
 
         const session = await Session.findById(id)
-            .populate("host", "name email profileImage clerkId")
-            .populate("participant", "name email profileImage clerkId");
+            .populate("host", "firstName lastName email profileImage clerkId")
+            .populate("participant", "firstName lastName email profileImage clerkId")
 
         if (!session) return res.status(404).json({ message: "Session not found" });
 
