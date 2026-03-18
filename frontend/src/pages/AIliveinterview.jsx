@@ -79,13 +79,12 @@ const AiLiveInterview = () => {
  useEffect(() => {
     const loadModels = async () => {
       try {
-        // Bypassing local files completely! Loading directly from Global CDN.
-        const MODEL_URL = "https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights";
+        const MODEL_URL = "/models"; 
         
         await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
         await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
         
-        console.log("✅ Face model loaded strictly from CDN");
+        console.log("✅ Face model loaded strictly from LOCAL folder");
         setModelsLoaded(true);
       } catch (err) {
         console.error("Model load error:", err);
