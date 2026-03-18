@@ -13,7 +13,7 @@ function AIMockConstructionPage() {
   const handleInitiateInterview = async () => {
     setLoading(true);
     try {
-      const res = await fetch("`${import.meta.env.VITE_API_URL}/api/interview/generate`", {
+      const res = await fetch("`${import.meta.env.VITE_BACKEND_URL}/api/interview/generate`", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
