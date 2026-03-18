@@ -7,12 +7,15 @@ function InterviewHistory() {
   const navigate = useNavigate();
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [deletingId, setDeletingId] = useState(null); // ✅ NEW — tracks which row is deleting
+  const [deletingId, setDeletingId] = useState(null); 
+
+  // Backend URL variable
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const fetchInterviews = async () => {
       try {
-        const res = await fetch(`/api/interview/history/${user.id}`);
+        const res = await fetch(`${API_BASE_URL}/api/interview/history/${user.id}`);
         const data = await res.json();
         setInterviews(data.interviews || []);
       } catch (err) {
@@ -25,20 +28,18 @@ function InterviewHistory() {
     if (user?.id) fetchInterviews();
   }, [user]);
 
-  // ✅ NEW — delete handler
   const handleDelete = async (sessionId) => {
     const confirmed = window.confirm("Delete this interview report? This cannot be undone.");
     if (!confirmed) return;
 
     setDeletingId(sessionId);
     try {
-      const res = await fetch(`/api/interview/delete/${sessionId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/interview/delete/${sessionId}`, {
         method: "DELETE",
       });
 
       if (!res.ok) throw new Error("Delete failed");
 
-      // ✅ remove from local state instantly — no refetch needed
       setInterviews((prev) => prev.filter((i) => i.sessionId !== sessionId));
     } catch (err) {
       console.error("Failed to delete interview:", err);
@@ -135,7 +136,7 @@ function InterviewHistory() {
                 justifyContent: "space-between",
                 gap: "16px",
                 flexWrap: "wrap",
-                opacity: isDeleting ? 0.5 : 1,  // ✅ fade row while deleting
+                opacity: isDeleting ? 0.5 : 1,  
                 transition: "opacity 0.2s"
               }}
             >
@@ -208,7 +209,7 @@ function InterviewHistory() {
                   View Report →
                 </button>
 
-                {/* ✅ NEW — Delete button */}
+                {/* Delete button */}
                 <button
                   onClick={() => handleDelete(interview.sessionId)}
                   disabled={isDeleting}
