@@ -10,9 +10,24 @@ function InterviewReportPage() {
   useEffect(() => {
     const fetchReport = async () => {
       try {
-        const res = await fetch(`/api/interview/report/${sessionId}`);
+        const baseUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000"; 
+        
+        console.log(`Fetching report for session: ${sessionId}`);
+        
+        const res = await fetch(`${baseUrl}/api/interview/report/${sessionId}`);
+      
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
         const data = await res.json();
-        setInterview(data.interview);
+        console.log("Backend Response:", data); 
+        if (data.interview) {
+          setInterview(data.interview);
+        } else {
+          setInterview(data); 
+        }
+
       } catch (err) {
         console.error("Failed to fetch report:", err);
       } finally {
@@ -20,7 +35,9 @@ function InterviewReportPage() {
       }
     };
 
-    fetchReport();
+    if (sessionId) {
+      fetchReport();
+    }
   }, [sessionId]);
 
   const getScoreColor = (score) => {
