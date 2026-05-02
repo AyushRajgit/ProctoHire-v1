@@ -245,7 +245,6 @@ function HomePage() {
 
       </section>
 
-      {/* TEAM SLIDE BAR */}
       <div id="Our-Team" className="py-36 pb-60 relative overflow-hidden z-10">
         <div className="max-w-7xl mx-auto px-6 mb-12">
           <h2 className="text-4xl font-bold text-white mb-2 tracking-tight">
@@ -259,7 +258,7 @@ function HomePage() {
           <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#030712] to-transparent z-20 pointer-events-none" />
           <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#030712] to-transparent z-20 pointer-events-none" />
 
-          <div className="flex flex-nowrap gap-8 animate-scroll py-4 group-hover/container:[animation-play-state:paused] group-active/container:[animation-play-state:paused]">
+          <div className="flex flex-nowrap gap-8 py-4 custom-smooth-scroll group-hover/container:[animation-play-state:paused] group-active/container:[animation-play-state:paused]">
             {[...teamMembers, ...teamMembers].map((member, i) => (
               <div key={i} className="w-[280px] flex-shrink-0 group/card relative">
 
@@ -275,7 +274,6 @@ function HomePage() {
                     {member.name.charAt(0)}
                   </span>
 
-                  {/* Content Details */}
                   <div className="relative z-10">
                     <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-2">
                       {member.role}
@@ -284,7 +282,6 @@ function HomePage() {
                       {member.name}
                     </h3>
 
-                    {/* Social Links */}
                     <div className="flex gap-3">
                       <button
                         onClick={() => window.open(member.links.Linkedin, '_blank')}
@@ -307,6 +304,19 @@ function HomePage() {
             ))}
           </div>
         </div>
+
+        {/* SMOOTH SCROLLING */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+    @keyframes smoothScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(-50% - 1rem)); }
+    }
+    .custom-smooth-scroll {
+      animation: smoothScroll 23s linear infinite;
+      will-change: transform;
+    }
+  `}} />
       </div>
 
       {/* FOOTER */}
