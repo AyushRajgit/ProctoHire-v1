@@ -43,7 +43,6 @@ function AIMockConstructionPage() {
   };
 
   return (
-    // ✅ Full screen backdrop — clicking it goes back
     <div
       onClick={() => navigate(-1)}
       style={{

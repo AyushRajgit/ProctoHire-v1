@@ -74,7 +74,7 @@ function SessionPage() {
     if (isHost || isParticipant) return; // Agar already ander hai toh kuch mat karo
 
     if (pwdFromUrl) {
-      // 1. Agar Magic Link se aaya hai, toh seedha join API hit kar do
+      // Agar Magic Link se aaya hai, toh seedha join API hit kar do
       joinSessionMutation.mutate(
         { id: id, password: pwdFromUrl },
         { 
@@ -89,7 +89,7 @@ function SessionPage() {
         }
       );
     } else {
-      // 2. Agar bina pwd ke URL khola hai, toh Pop-up dikhao
+      // Agar bina pwd ke URL khola hai, toh Pop-up dikhao
       setShowPasswordPrompt(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

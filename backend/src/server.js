@@ -44,7 +44,7 @@ app.post("/api/run", async (req, res) => {
 
     let code = files[0].content;
 
-    // 🔥 Java special handling
+    // Java special handling
     if (language === "java") {
       // Rename any public class to Main
       code = code.replace(/public class\s+\w+/, "public class Main");
@@ -73,7 +73,7 @@ public class Main {
       return res.status(400).json({ error: "Unsupported language" });
     }
 
-    // 🔥 Submit code to Judge0
+    // Submit code to Judge0
     const submitResponse = await fetch(
       "https://ce.judge0.com/submissions?base64_encoded=false",
       {
@@ -98,7 +98,7 @@ public class Main {
 
     let resultData;
 
-    // 🔥 Poll until execution finishes
+    // Poll until execution finishes
     while (true) {
       const resultResponse = await fetch(
         `https://ce.judge0.com/submissions/${token}?base64_encoded=false`

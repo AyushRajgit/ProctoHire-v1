@@ -164,7 +164,7 @@ export const completeInterview = async (req, res) => {
 };
 
 
-// ✅ NEW — fetch all interviews for a candidate (for dashboard history)
+// fetch all interviews for a candidate (for dashboard history)
 export const getMyInterviews = async (req, res) => {
   try {
     const { candidateId } = req.params;
@@ -191,7 +191,7 @@ export const getMyInterviews = async (req, res) => {
   }
 };
 
-// ✅ NEW — delete one interview by sessionId
+// delete one interview by sessionId
 export const deleteInterview = async (req, res) => {
   try {
     const { sessionId } = req.params;
@@ -207,7 +207,7 @@ export const deleteInterview = async (req, res) => {
 };
 
 
-// ✅ NEW — fetch one full interview report by sessionId (for report page)
+// fetch one full interview report by sessionId (for report page)
 export const getInterviewById = async (req, res) => {
   try {
     const { sessionId } = req.params;

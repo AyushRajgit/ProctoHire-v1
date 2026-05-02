@@ -1,4 +1,4 @@
-import crypto from "crypto"; // 🔥 FIX 1: Proper ES Module import
+import crypto from "crypto"; 
 import { streamClient, chatClient } from "../lib/stream.js"
 import { Session } from "../models/Session.modal.js"
 
@@ -113,12 +113,12 @@ export async function joinSession(req, res) {
 
         const session = await Session.findById(id);
 
-        // 🔥 FIX 2: Pehle check karo ki session null toh nahi hai
+        // Pehle check karo ki session null toh nahi hai
         if (!session) {
             return res.status(404).json({ message: "Session not found" });
         }
 
-        // 🔥 Usk baad password check karo
+        // Usk baad password check karo
         if (session.password !== password) {
             return res.status(403).json({ error: "Invalid Room Password!" });
         }

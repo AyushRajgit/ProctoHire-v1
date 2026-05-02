@@ -85,7 +85,7 @@ function HomePage() {
                 muted
                 playsInline
               />
-              {/* 👆 VIDEO TAG END 👆 */}
+              {/* VIDEO TAG*/}
 
               <div className="absolute bottom-6 left-6 right-6 flex justify-between items-end pointer-events-none">
                 <div className="bg-black/60 backdrop-blur-md border border-white/10 p-4 rounded-xl flex items-center gap-4">
@@ -248,7 +248,9 @@ function HomePage() {
       {/* TEAM SLIDE BAR */}
       <div id="Our-Team" className="py-36 pb-60 relative overflow-hidden z-10">
         <div className="max-w-7xl mx-auto px-6 mb-12">
-          <h2 className="text-4xl font-bold text-white mb-2 tracking-tight">Meet the <span className="text-primary italic">Visionaries</span></h2>
+          <h2 className="text-4xl font-bold text-white mb-2 tracking-tight">
+            Meet the <span className="text-primary italic">Visionaries</span>
+          </h2>
           <p className="text-slate-400">The engineers and designers building the future of technical trust.</p>
         </div>
 
@@ -257,27 +259,33 @@ function HomePage() {
           <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#030712] to-transparent z-20 pointer-events-none" />
           <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#030712] to-transparent z-20 pointer-events-none" />
 
-          <div
-            className="flex flex-nowrap gap-8 animate-scroll py-4 group-hover/container:[animation-play-state:paused] group-active/container:[animation-play-state:paused]"
-          >
+          <div className="flex flex-nowrap gap-8 animate-scroll py-4 group-hover/container:[animation-play-state:paused] group-active/container:[animation-play-state:paused]">
             {[...teamMembers, ...teamMembers].map((member, i) => (
-              <div
-                key={i}
-                className="w-80 flex-shrink-0 group/card relative"
-              >
-                <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-white/10 bg-[#0A0F1C] transition-all duration-500 group-hover/card:border-primary/50">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-full object-cover grayscale group-hover/card:grayscale-0 group-hover/card:scale-105 transition-all duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-[#030712]/20 to-transparent opacity-90" />
+              <div key={i} className="w-[280px] flex-shrink-0 group/card relative">
 
-                  <div className="absolute bottom-0 left-0 p-8 w-full">
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-2">{member.role}</p>
-                    <h3 className="text-2xl font-bold text-white mb-4 tracking-tight">{member.name}</h3>
+                <div className="relative h-[340px] rounded-[2.5rem] p-8 flex flex-col justify-between border border-white/10 bg-[#0A0F1C] transition-all duration-500 overflow-hidden group-hover/card:border-primary/50">
 
-                    <div className="flex gap-3 translate-y-8 opacity-0 group-hover/card:translate-y-0 group-hover/card:opacity-100 transition-all duration-500">
+                  <div className="relative size-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover/card:border-primary/50 group-hover/card:bg-primary/10 transition-colors duration-500 z-10">
+                    <span className="text-lg font-bold text-white/70 group-hover/card:text-primary transition-colors">
+                      {member.name.charAt(0)}
+                    </span>
+                  </div>
+
+                  <span className="absolute -bottom-8 -right-4 text-[14rem] font-bold text-white/[0.03] select-none group-hover/card:text-primary/[0.03] transition-colors duration-500 pointer-events-none">
+                    {member.name.charAt(0)}
+                  </span>
+
+                  {/* Content Details */}
+                  <div className="relative z-10">
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-2">
+                      {member.role}
+                    </p>
+                    <h3 className="text-2xl font-bold text-white mb-6 tracking-tight">
+                      {member.name}
+                    </h3>
+
+                    {/* Social Links */}
+                    <div className="flex gap-3">
                       <button
                         onClick={() => window.open(member.links.Linkedin, '_blank')}
                         className="size-10 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center hover:bg-[#0077b5] border border-white/10 transition-all"
@@ -293,7 +301,6 @@ function HomePage() {
                     </div>
                   </div>
 
-                  {/* Spotlight Glow */}
                   <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 bg-[radial-gradient(circle_at_50%_120%,rgba(var(--p),0.1),transparent_70%)] transition-opacity duration-700 pointer-events-none" />
                 </div>
               </div>

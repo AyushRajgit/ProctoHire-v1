@@ -13,7 +13,6 @@ import RecentSessions from "../components/RecentSessions";
 import CreateSessionModal from "../components/CreateSessionModal";
 import InterviewHistory from "../components/InterviewHistory";
 
-// 💼 CLEAN PRO-UI: BentoBox Wrapper
 const BentoBox = ({ children, height = "h-[420px]" }) => (
   <div className={`${height} w-full flex flex-col rounded-2xl bg-[#0A0F1C] border border-white/10 shadow-lg overflow-hidden`}>
     <div className="flex-1 overflow-y-auto p-1
@@ -41,7 +40,7 @@ function DashboardPage() {
   // Search Bar State
   const [joinLink, setJoinLink] = useState("");
   
-  // 🔥 NEW: Tabs State for History Section
+  // Tabs State for History Section
   const [historyTab, setHistoryTab] = useState("live"); // 'live' or 'ai'
 
   const createSessionMutation = useCreateSession();
@@ -131,7 +130,7 @@ function DashboardPage() {
 
           <WelcomeSection onCreateSession={() => setShowCreateModal(true)} user={user} />
 
-          {/* 💼 1. STATS CARDS */}
+          {/* STATS CARDS */}
           <div className="mb-10">
             <StatsCards
               activeSessionsCount={activeSessions.length}
@@ -139,7 +138,7 @@ function DashboardPage() {
             />
           </div>
 
-          {/* 💼 2. PREMIUM COMMAND PALETTE (Search Bar) */}
+          {/* SEARCH BAR */}
           <div className="max-w-3xl mx-auto mb-14 relative z-20">
             <form 
               onSubmit={handleJoinFromLink} 
@@ -165,7 +164,7 @@ function DashboardPage() {
             </form>
           </div>
 
-          {/* 💼 3. LIVE ARENAS */}
+          {/* LIVE ARENAS */}
           <div className="mb-12">
             <div className="flex items-center justify-between mb-5 px-1">
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
@@ -183,7 +182,7 @@ function DashboardPage() {
             </BentoBox>
           </div>
 
-          {/* 💼 4. REDESIGNED HISTORY SECTION (Tabs Style) */}
+          {/* SESSION HISTORY */}
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 px-1">
               <div className="flex items-center gap-2">
@@ -193,7 +192,6 @@ function DashboardPage() {
                 </h2>
               </div>
 
-              {/* Segmented Tabs Control */}
               <div className="flex items-center bg-[#0f172a] p-1 rounded-xl border border-white/5">
                 <button
                   onClick={() => setHistoryTab("live")}

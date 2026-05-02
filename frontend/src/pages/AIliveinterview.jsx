@@ -273,7 +273,7 @@ const AiLiveInterview = () => {
   const evaluateAnswer = async () => {
     if (!transcript.trim()) { alert("Please provide an answer before submitting."); return; }
     try {
-      // ✅ FIXED: Using absolute backend URL
+      // absolute backend URL
       const res = await fetch(`${API_BASE_URL}/api/interview/evaluate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -300,7 +300,7 @@ const AiLiveInterview = () => {
   const saveAndExit = async (terminatedEarly = false) => {
     try {
       if (sessionIdRef.current) {
-        // ✅ FIXED: Using absolute backend URL
+        // absolute backend URL
         await fetch(`${API_BASE_URL}/api/interview/complete`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
