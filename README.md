@@ -13,19 +13,24 @@
 
 ## ✨ Highlights & Features
 
+### 🤖 AI Mock & Proctoring Engine (Hero Feature)
+- **🧠 Autonomous AI Mock Interviews:** Dynamic, role-based technical questions with live Speech-to-Text transcription.
+- **🛡️ Edge-Computed AI Proctoring:** Client-side facial tracking, head-pose estimation, and multiple-face detection powered by **TensorFlow.js** and **face-api.js** (100% privacy, zero server lag).
+- **🚨 Real-Time Malpractice Detection:** Instantly flags tab-switching, unauthorized assistance, and focus loss.
+- **📊 Actionable Analytics:** Generates comprehensive, asynchronous evaluation reports yielding a unified **"Trust & Tech Score"** for recruiters.
+
+### 💻 Live Collaborative Ecosystem
 - **🧑‍💻 VSCode-Powered Code Editor:** Familiar and powerful code editing experience directly in the browser.
-- **🔐 Secure Authentication:** Seamless user login and session management powered by **Clerk**.
-- **🎥 1-on-1 Video Interview Rooms:** High-fidelity, low-latency video and audio calls.
-- **🧭 Interactive Dashboard:** Track live stats, active sessions, and recent interviews at a glance.
-- **🔊 Complete Call Controls:** Mic & Camera toggles, Screen Sharing, and Session Recording.
-- **💬 Real-time Chat Messaging:** Text-based communication alongside the video feed.
-- **⚙️ Secure Code Execution:** Run code safely in an isolated, sandboxed environment.
-- **🎯 Auto Feedback System:** Instant Success/Fail evaluations based on predefined test cases.
-- **🎉 Interactive UI:** Confetti animations on test success and instant toast notifications on failure.
-- **🧩 Practice Mode:** Dedicated problems page for solo coding and interview preparation.
+- **🎥 1-on-1 Video Interview Rooms:** High-fidelity, low-latency video and audio calls using WebRTC.
 - **🔒 Strict Room Locking:** Ensures privacy by allowing only exactly 2 participants per session.
-- **🧠 Background Jobs:** Asynchronous tasks and event handling powered by **Inngest**.
-- **🧰 Robust REST API:** Built with **Node.js** & **Express**.
+- **⚙️ Secure Code Execution:** Run code safely in an isolated, sandboxed environment.
+- **🎯 Auto Feedback System:** Instant Success/Fail evaluations based on predefined test cases with interactive UI confetti.
+- **💬 Real-time Chat & Controls:** Text messaging, mic/camera toggles, screen sharing, and session recording.
+
+### 🛠️ Core Infrastructure
+- **🔐 Secure Authentication:** Seamless user login and session management powered by **Clerk**.
+- **🔄 Background Jobs:** Heavy asynchronous tasks (like AI report generation) handled seamlessly by **Inngest**.
+- **🧭 Interactive Dashboard:** Track live stats, active sessions, and recent interviews at a glance.
 - **⚡ Optimized Data Fetching:** Fast caching and state management using **TanStack Query**.
 
 ---
