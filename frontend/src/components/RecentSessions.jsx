@@ -1,7 +1,10 @@
 import { ClockIcon, CalendarIcon, ActivityIcon } from "lucide-react";
-import { Link } from "react-router";
+import { useState } from "react";
+import { getVerdictLabel, getVerdictStyles } from "../lib/utils";
+import FeedbackSummaryModal from "./FeedbackSummaryModal";
 
 function RecentSessions({ sessions, isLoading }) {
+  const [selectedSession, setSelectedSession] = useState(null);
   // 1. Premium Loading State
   if (isLoading) {
     return (
@@ -64,42 +67,52 @@ function RecentSessions({ sessions, isLoading }) {
                     {session.problem}
                   </h4>
                   
-                  <span className="shrink-0 flex items-center gap-1.5 text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 border border-green-500/20 backdrop-blur-md">
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
+                  {session.feedback ? (
+                    <span className={`shrink-0 text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full border backdrop-blur-md ${getVerdictStyles(session.feedback.verdict)}`}>
+                      {getVerdictLabel(session.feedback.verdict)}
                     </span>
-                    Completed
-                  </span>
+                  ) : (
+                    <span className="shrink-0 flex items-center gap-1.5 text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 border border-green-500/20 backdrop-blur-md">
+                      <span className="relative flex h-1.5 w-1.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
+                      </span>
+                      Completed
+                    </span>
+                  )}
                 </div>
-                
+
                 {session.difficulty && (
                   <span className="inline-block px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-xs font-medium text-slate-300 capitalize mb-6">
                     {session.difficulty}
                   </span>
                 )}
               </div>
-              
+
               <div className="flex items-center justify-between pt-5 border-t border-white/5 mt-4">
                 <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium bg-white/[0.02] px-2.5 py-1.5 rounded-lg border border-white/5">
                   <CalendarIcon className="size-3.5" />
-                  {new Date(session.createdAt).toLocaleDateString('en-US', { 
-                    month: 'short', day: 'numeric', year: 'numeric' 
+                  {new Date(session.createdAt).toLocaleDateString('en-US', {
+                    month: 'short', day: 'numeric', year: 'numeric'
                   })}
                 </div>
-                
-                <Link 
-                  to={`/session/${session._id}`}
+
+                <button
+                  onClick={() => setSelectedSession(session)}
                   className="text-sm font-bold text-slate-300 group-hover:text-primary transition-colors flex items-center gap-1.5 bg-transparent px-3 py-1.5 rounded-lg hover:bg-primary/10"
                 >
-                  Review 
+                  {session.feedback ? "View Feedback" : "Review"}
                   <span className="transform group-hover:translate-x-1 transition-transform duration-300">&rarr;</span>
-                </Link>
+                </button>
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      {selectedSession && (
+        <FeedbackSummaryModal session={selectedSession} onClose={() => setSelectedSession(null)} />
+      )}
     </div>
   );
 }

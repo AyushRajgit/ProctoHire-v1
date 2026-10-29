@@ -18,6 +18,7 @@ import useStreamClient from "../hooks/useStreamClient";
 import { StreamCall, StreamVideo } from "@stream-io/video-react-sdk";
 import VideoCallUI from "../components/VideoCallUI";
 import ProblemDescription from "../components/ProblemDescription";
+import InterviewFeedbackModal from "../components/InterviewFeedbackModal";
 
 function SessionPage() {
   const navigate = useNavigate();
@@ -33,6 +34,9 @@ function SessionPage() {
   // Manual Password entry ke liye naye states
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [manualPassword, setManualPassword] = useState("");
+
+  // Host-submitted interview feedback (verdict, ratings, remarks) before ending the session
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
   const { data: sessionData, isLoading: loadingSession, refetch } = useSessionById(id);
 
@@ -206,9 +210,27 @@ function SessionPage() {
   };
 
   const handleEndSession = () => {
-    if (confirm("Are you sure you want to end this session? All participants will be notified.")) {
-      endSessionMutation.mutate(id, { onSuccess: () => navigate("/dashboard") });
+    // a candidate is present — capture their interview verdict before closing the room
+    if (session?.participant) {
+      setShowFeedbackModal(true);
+      return;
     }
+
+    if (confirm("Are you sure you want to end this session?")) {
+      endSessionMutation.mutate({ id }, { onSuccess: () => navigate("/dashboard") });
+    }
+  };
+
+  const handleSubmitFeedback = (feedback) => {
+    endSessionMutation.mutate(
+      { id, feedback },
+      {
+        onSuccess: () => {
+          setShowFeedbackModal(false);
+          navigate("/dashboard");
+        },
+      }
+    );
   };
 
   return (
@@ -372,6 +394,16 @@ function SessionPage() {
             </form>
           </div>
         </div>
+      )}
+
+      {/* INTERVIEW FEEDBACK MODAL (host only, before ending the session) */}
+      {showFeedbackModal && (
+        <InterviewFeedbackModal
+          candidateName={session?.participant?.firstName}
+          isSubmitting={endSessionMutation.isPending}
+          onClose={() => setShowFeedbackModal(false)}
+          onSubmit={handleSubmitFeedback}
+        />
       )}
 
     </div>

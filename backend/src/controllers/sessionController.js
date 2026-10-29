@@ -145,10 +145,13 @@ export async function joinSession(req, res) {
     }
 }
 
+const VALID_VERDICTS = ["strong_hire", "hire", "no_hire", "strong_no_hire"];
+
 export async function endSession(req, res) {
     try {
         const { id } = req.params;
         const userId = req.user._id;
+        const { feedback } = req.body;
 
         const session = await Session.findById(id);
 
@@ -159,12 +162,44 @@ export async function endSession(req, res) {
             return res.status(404).json({ message: "only the host can end the session" });
         }
 
-        // check if session is already completed : 
+        // check if session is already completed :
         if (session.status === "completed") {
             return res.status(400).json({ message: "Session is already completed" });
         }
 
-        // delete stream video call 
+        // only meaningful if a candidate actually joined the room
+        if (session.participant) {
+            if (!feedback || !feedback.verdict || !feedback.overallRating) {
+                return res.status(400).json({
+                    message: "Interview feedback (verdict and overall rating) is required to end the session",
+                });
+            }
+
+            if (!VALID_VERDICTS.includes(feedback.verdict)) {
+                return res.status(400).json({ message: "Invalid verdict value" });
+            }
+
+            const overallRating = Number(feedback.overallRating);
+            if (!Number.isFinite(overallRating) || overallRating < 1 || overallRating > 5) {
+                return res.status(400).json({ message: "overallRating must be a number between 1 and 5" });
+            }
+
+            session.feedback = {
+                verdict: feedback.verdict,
+                overallRating,
+                ratings: {
+                    problemSolving: feedback.ratings?.problemSolving,
+                    codeQuality: feedback.ratings?.codeQuality,
+                    communication: feedback.ratings?.communication,
+                    technicalKnowledge: feedback.ratings?.technicalKnowledge,
+                },
+                remarks: feedback.remarks?.trim() || "",
+                submittedBy: userId,
+                submittedAt: new Date(),
+            };
+        }
+
+        // delete stream video call
         const call = streamClient.video.call("default", session.callId);
         await call.delete({ hard: true });
 
