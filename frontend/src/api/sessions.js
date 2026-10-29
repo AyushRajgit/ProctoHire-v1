@@ -25,8 +25,8 @@ export const sessionApi = {
     const response = await axiosInstance.post(`/sessions/${id}/join`, { password });
     return response.data;
   },
-  endSession: async (id) => {
-    const response = await axiosInstance.post(`/sessions/${id}/end`);
+  endSession: async ({ id, feedback }) => {
+    const response = await axiosInstance.post(`/sessions/${id}/end`, { feedback });
     return response.data;
   },
   getStreamToken: async () => {
