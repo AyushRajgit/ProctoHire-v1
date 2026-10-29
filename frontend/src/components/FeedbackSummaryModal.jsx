@@ -53,16 +53,23 @@ function FeedbackSummaryModal({ session, onClose }) {
             </div>
 
             {feedback.ratings && (
-              <div className="space-y-2.5 border-t border-white/5 pt-5">
-                {RATING_CRITERIA.map(({ key, label }) =>
-                  feedback.ratings[key] ? (
-                    <div key={key} className="flex items-center justify-between">
-                      <span className="text-sm text-slate-400">{label}</span>
-                      <Stars value={feedback.ratings[key]} />
-                    </div>
-                  ) : null
-                )}
-              </div>
+              <ul className="space-y-3.5 border-t border-white/5 pt-5 list-none">
+                {RATING_CRITERIA.map(({ key, label }) => {
+                  const detail = feedback.ratings[key];
+                  if (!detail || !detail.score) return null;
+                  return (
+                    <li key={key} className="space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-slate-400">{label}</span>
+                        <Stars value={detail.score} />
+                      </div>
+                      {detail.note && (
+                        <p className="text-xs text-slate-500 leading-relaxed">{detail.note}</p>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
             )}
 
             {feedback.remarks && (

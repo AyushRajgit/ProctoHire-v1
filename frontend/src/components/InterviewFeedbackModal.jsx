@@ -34,10 +34,10 @@ function InterviewFeedbackModal({ candidateName, onSubmit, onClose, isSubmitting
   const [verdict, setVerdict] = useState("");
   const [overallRating, setOverallRating] = useState(0);
   const [ratings, setRatings] = useState({
-    problemSolving: 0,
-    codeQuality: 0,
-    communication: 0,
-    technicalKnowledge: 0,
+    problemSolving: { score: 0, note: "" },
+    codeQuality: { score: 0, note: "" },
+    communication: { score: 0, note: "" },
+    technicalKnowledge: { score: 0, note: "" },
   });
   const [remarks, setRemarks] = useState("");
 
@@ -97,20 +97,42 @@ function InterviewFeedbackModal({ candidateName, onSubmit, onClose, isSubmitting
           </div>
 
           {/* SUB RATINGS */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             <label className="text-sm font-semibold text-white block">
               Scorecard <span className="text-slate-500 font-normal">(optional)</span>
             </label>
-            {RATING_CRITERIA.map(({ key, label }) => (
-              <div key={key} className="flex items-center justify-between gap-4">
-                <span className="text-sm text-slate-400">{label}</span>
-                <StarPicker
-                  size="size-4"
-                  value={ratings[key]}
-                  onChange={(val) => setRatings((prev) => ({ ...prev, [key]: val }))}
-                />
-              </div>
-            ))}
+            <ul className="space-y-4 list-none">
+              {RATING_CRITERIA.map(({ key, label }) => (
+                <li key={key} className="space-y-2">
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="text-sm text-slate-400">{label}</span>
+                    <StarPicker
+                      size="size-4"
+                      value={ratings[key].score}
+                      onChange={(val) =>
+                        setRatings((prev) => ({
+                          ...prev,
+                          [key]: { ...prev[key], score: val },
+                        }))
+                      }
+                    />
+                  </div>
+                  <textarea
+                    value={ratings[key].note}
+                    onChange={(e) =>
+                      setRatings((prev) => ({
+                        ...prev,
+                        [key]: { ...prev[key], note: e.target.value },
+                      }))
+                    }
+                    rows={2}
+                    maxLength={300}
+                    placeholder={`Short note on ${label.toLowerCase()}...`}
+                    className="w-full bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
+                  />
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* REMARKS */}

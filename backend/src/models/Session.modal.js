@@ -1,5 +1,13 @@
 import mongoose from "mongoose";
 
+const ratingDetailSchema = new mongoose.Schema(
+    {
+        score: { type: Number, min: 1, max: 5 },
+        note: { type: String, trim: true, maxlength: 300 },
+    },
+    { _id: false }
+);
+
 const feedbackSchema = new mongoose.Schema(
     {
         verdict: {
@@ -9,10 +17,10 @@ const feedbackSchema = new mongoose.Schema(
         },
         overallRating: { type: Number, min: 1, max: 5, required: true },
         ratings: {
-            problemSolving: { type: Number, min: 1, max: 5 },
-            codeQuality: { type: Number, min: 1, max: 5 },
-            communication: { type: Number, min: 1, max: 5 },
-            technicalKnowledge: { type: Number, min: 1, max: 5 },
+            problemSolving: ratingDetailSchema,
+            codeQuality: ratingDetailSchema,
+            communication: ratingDetailSchema,
+            technicalKnowledge: ratingDetailSchema,
         },
         remarks: { type: String, trim: true, maxlength: 2000 },
         submittedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },

@@ -184,14 +184,23 @@ export async function endSession(req, res) {
                 return res.status(400).json({ message: "overallRating must be a number between 1 and 5" });
             }
 
+            const buildRatingDetail = (detail) => {
+                if (!detail) return undefined;
+                const score = Number(detail.score);
+                return {
+                    score: Number.isFinite(score) ? score : undefined,
+                    note: detail.note?.trim() || "",
+                };
+            };
+
             session.feedback = {
                 verdict: feedback.verdict,
                 overallRating,
                 ratings: {
-                    problemSolving: feedback.ratings?.problemSolving,
-                    codeQuality: feedback.ratings?.codeQuality,
-                    communication: feedback.ratings?.communication,
-                    technicalKnowledge: feedback.ratings?.technicalKnowledge,
+                    problemSolving: buildRatingDetail(feedback.ratings?.problemSolving),
+                    codeQuality: buildRatingDetail(feedback.ratings?.codeQuality),
+                    communication: buildRatingDetail(feedback.ratings?.communication),
+                    technicalKnowledge: buildRatingDetail(feedback.ratings?.technicalKnowledge),
                 },
                 remarks: feedback.remarks?.trim() || "",
                 submittedBy: userId,
